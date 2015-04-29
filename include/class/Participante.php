@@ -36,7 +36,7 @@ class Participante {
 
     }
 
-    private function validarDatosParticipante(Array $datos) {
+    private function validarDatosParticipante(Array &$datos) {
 
         //-- Revisar que no falten datos requeridos
         $datos_requeridos = ['nombre','apellido','dni','email'];
@@ -61,6 +61,14 @@ class Participante {
             throw new \Exception("Error validando datos del participante. El email ya está registrado.");
         }
 
+        //-- Acomodamos las mayusculas/minusculas de algunos campos
+        $campos = ['localidad','nombre','apellido'];
+        foreach($campos as $c) {
+            if(isset($datos[$c]) && strlen($datos[$c])>0) {
+                $datos[$c] = ucwords(strtolower($datos[$c]));
+            }
+        }
+
         return;
     }
 
@@ -69,6 +77,14 @@ class Participante {
      */
     public function loginParticipante($email,$password) {
 
+        try {
+            $p = new \Congreso\entities\Participante();
+            $p->fromDatabaseWithCredentials($email,$password);
+
+            return $p->toArray();
+        }catch(\Exception $e) {
+            throw $e;
+        }
     }
 
     /*
@@ -136,9 +152,8 @@ class Participante {
 
             $data_from_token = Utilities::parse_signed_request($token,_ENCODING_SECRET);
             return $data_from_token;
-
         }catch(\Exception $e) {
-            throw $e;
+            return false;
         }
     }
 
@@ -149,6 +164,7 @@ class Participante {
     public function sendWelcomeEmail($id) {
 
     }
+
     /*
      * Obtiene un Array con los datos de un participante
      */
@@ -170,6 +186,60 @@ class Participante {
             throw new \Exception("No ha provisto id de participante a eliminar");
         }
 
+    }
+
+    /**
+     * Devuelve una lista de participantes acorde a los filtros seleccionados
+     * @param int $from
+     * @param $limit
+     * @param array $filtros
+     * @return array
+     * @throws \Exception
+     */
+    public function listParticipantes($from=0,$limit=_DEFAULT_LIST_LIMIT,Array $filtros=null,Array $orden = null) {
+
+        $this->validarFiltros($filtros);
+
+        try {
+            if(is_null($orden)) {
+                $orden = ["c"=>"id","d"=>"ASC"];
+            }
+            return \Congreso\entities\Participante::listParticipantes($from,$limit,$filtros,$orden);
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Devuelve el total de participantes segun los filtros seleccionados
+     * @param int $from
+     * @param $limit
+     * @param array $filtros
+     * @return array
+     * @throws \Exception
+     */
+    public function countParticipantes(Array $filtros=null) {
+
+        $this->validarFiltros($filtros);
+
+        try {
+            return \Congreso\entities\Participante::listParticipantes(0,null,$filtros,null,true);
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
+
+    private function validarFiltros(Array $filtros) {
+        if($filtros && count($filtros)>0) {
+            //-- Validar que no manden fitros cualquiera
+            $valid_filters = ['nombre','apellido','dni','localidad','email','nivel'];
+
+            foreach($filtros as $columna=>$valor) {
+                if(!in_array($columna,$valid_filters)) {
+                    throw new \Exception("Filtro ".$columna." es invalido");
+                }
+            }
+        }
     }
 
 

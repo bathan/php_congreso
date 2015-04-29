@@ -67,4 +67,30 @@ class Utilities {
     private static function base64_url_decode($input) {
         return base64_decode(strtr($input, '-_', '+/'));
     }
+
+    public static function populateClassFromArray(&$class,$array) {
+        foreach($array as $key=>$value) {
+            if(property_exists($class,$key)) {
+                $class->$key = $value;
+            }
+        }
+    }
+
+    public static function purifyQueryString(Array $valuesToRemove) {
+
+        $query_string = $_SERVER['QUERY_STRING'];
+        parse_str($query_string,$query_string_array);
+
+        $new_array = [];
+
+        foreach($query_string_array as $k=>$v) {
+            if(!in_array($k,$valuesToRemove)) {
+                $new_array[] = $k."=".$v;
+            }
+        }
+
+        return implode('&',$new_array);
+
+    }
+
 }

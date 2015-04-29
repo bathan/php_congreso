@@ -4,6 +4,7 @@ namespace Congreso\entities;
 require_once _CONGRESO_DATA_ACCESS_PATH;
 
 use CongresoDataAccess;
+use Congreso\Logica\Utilities;
 
 class Participante {
 
@@ -30,7 +31,7 @@ class Participante {
 
     public function fromArray(Array $datos) {
         if(count($datos)>0) {
-            $this->populateFromArray($this,$datos);
+            Utilities::populateClassFromArray($this,$datos);
         }else{
             throw new \Exception("No hay información para popular al Participante");
         }
@@ -41,7 +42,7 @@ class Participante {
             $q = "select * from participantes where id='".$db->escape($id)."'";
             $db_resource = $db->executeAndFetchSingle($q);
             if($db_resource) {
-                $this->populateFromArray($this,$db_resource);
+                Utilities::populateClassFromArray($this,$db_resource);
             }
         }catch(\Exception $e) {
             throw $e;
@@ -63,14 +64,7 @@ class Participante {
         return $json_string;
     }
 
-    private function populateFromArray($class,$array) {
-        foreach($array as $key=>$value) {
 
-            if(property_exists($class,$key)) {
-                $class->$key = $value;
-            }
-        }
-    }
 
     public function toDatabase() {
 
@@ -120,8 +114,10 @@ class Participante {
             $db = new \CongresoDataAccess();
             $q = "select * from participantes where email='".$db->escape($email)."' and password='".$db->escape($password)."'";
             $db_resource = $db->executeAndFetchSingle($q);
-            if($db_resource) {
-                $this->populateFromArray($this,$db_resource);
+            if(!is_null($db_resource)) {
+                Utilities::populateClassFromArray($this,$db_resource);
+            }else{
+                throw new \Exception("Credenciales incorrectas");
             }
         }catch(\Exception $e) {
             throw $e;
@@ -138,6 +134,73 @@ class Participante {
             }else{
                 return false;
             }
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /*
+     * Devuelve una lista de objetos Participante en base a los filtros provitos
+     */
+    public static function listParticipantes($from=0,$limit=_DEFAULT_LIST_LIMIT,Array $filtros=null,Array $orden = null,$count=false) {
+        try {
+            $db = new \CongresoDataAccess();
+
+            $response_array = ["orderby"=>$orden,"rows"=>[]];
+
+            if($count) {
+                $q = "select count(*) as the_count from participantes";
+            }else{
+                $q = "select * from participantes ";
+            }
+
+            if(!is_null($filtros) && count($filtros)>0) {
+
+                $q .= " WHERE 1=1 AND ";
+
+                $filter_array = [];
+
+                foreach($filtros as $campo=>$valor) {
+                    $filter_array[]= $campo." like '%".$valor."%'";
+                }
+
+                $q .= implode(' AND ',$filter_array);
+            }
+
+            if(!$count && $orden && count($orden)>0) {
+                $q .=" ORDER BY ".$orden["c"]." ".$orden["d"]." ";
+            }
+
+            if(!$count && $limit) {
+                if($from==0) {
+                    $q .= " LIMIT ".$limit;
+                }else{
+                    $q .= " LIMIT ".$from.",".$limit;
+                }
+            }
+
+            if(_APP_DEBUG) {
+                echo "<pre>".$q."</pre>";
+            }
+
+            if($count) {
+                $db_resource = $db->executeAndFetchSingle($q);
+                $response_array = $db_resource["the_count"];
+            }else{
+                $db_resource = $db->executeAndFetch($q);
+                if(count($db_resource)>0) {
+                    $rows = [];
+                    foreach($db_resource as $res) {
+                        $p = new Participante();
+                        Utilities::populateClassFromArray($p,$res);
+                        $rows[$res["id"]] = $p->toArray();
+                    }
+
+                    $response_array["rows"] = $rows;
+                }
+            }
+            return $response_array;
+
         }catch(\Exception $e) {
             throw $e;
         }
