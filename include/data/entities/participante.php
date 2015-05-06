@@ -24,6 +24,7 @@ class Participante {
     public $created_date;
     public $last_update;
     public $last_login;
+    public $user_token;
 
     public function __construct() {
 
@@ -43,6 +44,8 @@ class Participante {
             $db_resource = $db->executeAndFetchSingle($q);
             if($db_resource) {
                 Utilities::populateClassFromArray($this,$db_resource);
+            }else{
+                throw new \Exception("No se encuentra al participante ".$id,1000);
             }
         }catch(\Exception $e) {
             throw $e;
@@ -97,6 +100,8 @@ class Participante {
         $q .= "email='".$db->escape($this->email)."',";
         $q .= "nivel='".$db->escape($this->nivel)."',";
         $q .= "password='".$db->escape($this->password)."',";
+        $q .= "user_token='".$db->escape($this->user_token)."',";
+        $q .= "last_login='".$db->escape($this->last_login)."',";
         $q .= "last_update=CURRENT_TIMESTAMP ";
         $q .= "where id=".$this->id;
 

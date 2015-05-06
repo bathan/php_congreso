@@ -26,16 +26,46 @@ class Participante {
             $p->fromArray($datos);
             $new_id = $p->toDatabase();
 
+            //-- Creamos el Token del Usuario
+            $this->actualizarParticipante($new_id,['user_token'=>$this->createUserToken($new_id)]);
+
             //-- Enviamos email al participante avisando que se dió de alta correctamente
             $this->sendWelcomeEmail($new_id);
 
             return $new_id;
+
         }catch(\Exception $e) {
             throw $e;
         }
 
     }
 
+    public function actualizarParticipante($id,Array $datos_a_actualizar) {
+        try {
+
+            //-- Insertar en la bbdd
+            $p = new \Congreso\entities\Participante();
+            $p->fromDatabase($id);
+
+            foreach($datos_a_actualizar as $d=>$v) {
+                if(property_exists($p,$d) && $v != '') {
+                    $p->$d=$v;
+                }
+            }
+
+            $p->update();
+
+            //-- Si mandó a actualizar el Email tenemos que volver a generarle el token
+            if(isset($datos_a_actualizar['email']) && $datos_a_actualizar['email']!='') {
+                $p->user_token = $this->createUserToken($id);
+                $p->update();
+            }
+
+
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
     private function validarDatosParticipante(Array &$datos) {
 
         //-- Revisar que no falten datos requeridos
@@ -80,6 +110,7 @@ class Participante {
         try {
             $p = new \Congreso\entities\Participante();
             $p->fromDatabaseWithCredentials($email,$password);
+            $this->actualizarParticipante($p->id,['last_login'=>date("Y-m-d H:i:s")]);
 
             return $p->toArray();
         }catch(\Exception $e) {
@@ -116,7 +147,7 @@ class Participante {
             $string .= $v;
         }
         //-- Quitamos caracteres NO alfanumericos
-        preg_replace("/[^A-Za-z0-9 ]/", '', $string);
+        $string = preg_replace("/[^A-Za-z0-9 ]/", '', $string);
 
         //-- Devolvemos una porción del string
         return substr(str_shuffle($string),0,$length);
@@ -127,12 +158,12 @@ class Participante {
     /*
      * Generar un token de usuario que será utilizado para operaciones via email
      */
-    public function getUserToken($id) {
+    public function createUserToken($id) {
 
         try {
             $p = $this->obtenerParticipante($id);
 
-            $data_para_token = ["id"=>$id,"email"=>$p["email"]];
+            $data_para_token = ["id"=>$id,"email"=>$p["email"],"created"=>date("Y-m-d H:i:s"),"env_secret"=>_TOKEN_SECRET];
 
             $token = Utilities::generate_signed_request($data_para_token,_ENCODING_SECRET);
 
@@ -145,12 +176,29 @@ class Participante {
     }
 
     /*
+    * Generar un token de usuario que será utilizado para operaciones via email
+    */
+    public function getUserToken($id) {
+
+        try {
+            $p = $this->obtenerParticipante($id);
+            return $p['user_token'];
+
+        }catch(\Exception $e) {
+            throw $e;
+        }
+
+    }
+
+    /*
      * Validar el token del usuario
      */
     public function validateUserToken($token) {
         try {
-
             $data_from_token = Utilities::parse_signed_request($token,_ENCODING_SECRET);
+            if($data_from_token['env_secret']!=_TOKEN_SECRET) {
+                return null;
+            }
             return $data_from_token;
         }catch(\Exception $e) {
             return false;

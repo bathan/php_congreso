@@ -1,6 +1,8 @@
 <?php
+session_start();
 
 include_once __DIR__ . '/../include/config.php';
+
 
 $pl = new \Congreso\Logica\Participante();
 
@@ -15,23 +17,28 @@ $pl = new \Congreso\Logica\Participante();
 </head>
 <body>
 <h2>Login Form Test</h2>
-<form name="login_form" action="../form_actions/participantes/participante_login.php" method="POST">
+<form name="login_form" action="../form_actions/participantes/" method="POST">
     email: <input type="text" id="email" name="email"><br>
     password : <input type="password" id="password" name="password">
     <input type="hidden" id="action" name="action" value="login">
-    <input type="submit" value="do_login">
+    <input type="submit" value="do_login_credentials">
 </form>
 
-
+<hr>
 <h2>Token Login Form Test</h2>
-<form name="login_form" action="../form_actions/participantes/participante_login.php" method="POST">
+<form name="login_form" action="../form_actions/participantes/" method="POST">
     token: <input type="text" id="token" name="token"><br>
     <input type="hidden" id="action" name="action" value="login_token">
-    <input type="submit" value="do_login">
+    <input type="submit" value="do_login_token">
 </form>
 
 <hr/>
-
+<h2>Login Form Test</h2>
+<form name="login_form" action="../form_actions/participantes/" method="POST">
+    <input type="hidden" id="action" name="action" value="logout">
+    <input type="submit" value="do_logout">
+</form>
+</hr>
 <script>
     function sortTable(sortField) {
         var sortDirection = $("#sort_direction").val();
@@ -48,6 +55,10 @@ $pl = new \Congreso\Logica\Participante();
 </script>
 
 <?php
+if(isset($_SESSION['user_token'])) {
+    echo "<pre>SESSION TOKEN: ".$_SESSION['user_token']."</pre><br>";
+}
+
 $limit  = _DEFAULT_LIST_LIMIT;
 $page = 1;
 $pages = 1;
@@ -55,7 +66,7 @@ $pages = 1;
 try {
     $orderBy = [];
 
-    if($_GET["sort_field"] && strlen($_GET["sort_field"])>0) {
+    if(isset($_GET["sort_field"]) && strlen($_GET["sort_field"])>0) {
         $orderBy["c"] = $_GET["sort_field"];
         $orderBy["d"] = $_GET["sort_direction"];
     }
@@ -172,7 +183,7 @@ try {
             echo '<td>'.$p['email'].'</td>';
             echo '<td>'.$p['nivel'].'</td>';
             echo '<td>'.$p['created_date'].'</td>';
-            echo '<td><pre style="font-size: xx-small; word-break: normal ">'.$pl->getUserToken($p["id"]).'</pre></td>';
+            echo '<td><pre style="font-size: xx-small; word-break: normal ">'.$p['user_token'].'</pre></td>';
             echo '<tr>';
         }
 

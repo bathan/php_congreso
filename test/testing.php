@@ -29,7 +29,7 @@ try {
 
     echo "****** PARTICIPANTE TOKEN\n";
 
-    echo $token = $p_logic->getUserToken($nuevo_id);
+    echo $token = $p_logic->createUserToken($nuevo_id);
 
     echo "***** PARTICIPANTE EMAIL Y ID EN BASE AL TOKEN\n";
 

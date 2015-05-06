@@ -1,66 +1,36 @@
 <?php
-include_once __DIR__ . '/../../include/config.php';
-
-/*
- * Este file es el que se encargará de todas las acciones relacionadas a login de un participante
- */
-
-if($_POST) {
-    $formData = $_POST;
-    $pl = null;
-    try {
-        $pl = new participante_login($formData);
-
-        var_dump($pl->getParticipante());
-        //-- Maybe Start Session and Store info?
-
-    }catch(Exception $e) {
-        echo "ERROR: ".$e->getMessage();
-    }
-
-}
-
-
+require_once __DIR__ . '/../form_action_base.php';
 
 /**
  * Class participante_login
  */
 
-class participante_login {
+class participante_login extends form_action_base{
 
-    const ACTION_LOGIN_REGULAR = 'login';
-    const ACTION_LOGIN_TOKEN = 'login_token';
-
-    private $action;
     private $participante;
 
     public function __construct(Array $formData) {
 
-        if(isset($formData["action"])) {
+        try {
+            parent::__construct($formData);
 
-            try {
-                $this->action = $formData["action"];
-
-                switch($this->action) {
-                    case self::ACTION_LOGIN_REGULAR: {
-                        $this->participante = $this->loginRegular($formData);
-                        break;
-                    }
-                    case self::ACTION_LOGIN_TOKEN: {
-                        $this->participante = $this->loginToken($formData);
-                        break;
-                    }
-                    default: {
-                        break;
-                    }
+            switch ($this->action) {
+                case self::ACTION_LOGIN_REGULAR: {
+                    $this->loginRegular($formData);
+                    break;
                 }
-            }catch(Exception $e) {
-                throw $e;
+                case self::ACTION_LOGIN_TOKEN: {
+                    $this->loginToken($formData);
+                    break;
+                }
+                default: {
+                    break;
+                }
             }
-
-        }else{
-            throw new Exception("[".get_class($this)."] Missing Action");
+        }catch(Exception $e) {
+            throw $e;
         }
+
     }
 
     /*
@@ -69,15 +39,19 @@ class participante_login {
     private function loginRegular(Array $formData) {
 
         try {
-            $this->validateRequiredFields($formData,['email','password']);
+            $this->validateRequiredFields(['email','password']);
             $email = $formData['email'];
             $password = $formData['password'];
 
             $p_logic = New \Congreso\Logica\Participante();
             $p = $p_logic->loginParticipante($email,$password);
-            return $p;
+
+            unset($p['password']);
+            $this->result = array_merge(["status"=>"ok"],$p);
+            $this->participante = $p;
+
         }catch(Exception $e) {
-            throw $e;
+            $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
         }
 
     }
@@ -85,31 +59,30 @@ class participante_login {
      * Login mediante token requiere que se pase un token valido
      */
     private function loginToken(Array $formData) {
-        $this->validateRequiredFields($formData,['token']);
-        $token = $formData['token'];
 
-        $p_logic = new \Congreso\Logica\Participante();
-        if($token_data = $p_logic->validateUserToken($token)) {
-            $id = $token_data["id"];
+        try {
 
-            $p = $p_logic->obtenerParticipante($id);
-            return $p;
-        }else{
-            throw new Exception("El Token de usuario no es valido");
-        }
+            $this->validateRequiredFields(['token']);
+            $token = $formData['token'];
 
-    }
+            $p_logic = new \Congreso\Logica\Participante();
+            if($token_data = $p_logic->validateUserToken($token)) {
 
-    private function validateRequiredFields(Array $formData,Array $requiredFields)
-    {
-        $missing_fields = [];
-        foreach($requiredFields as $rf) {
-            if(!isset($rf,$formData)) {
-                $missing_fields[] = $rf;
+                $id = $token_data["id"];
+
+                $p = $p_logic->obtenerParticipante($id);
+
+                //-- Since we are logging, lets return the whole participante except for the password
+                unset($p['password']);
+                $this->result = array_merge(["status"=>"ok"],$p);
+                $this->participante = $p;
+
+            }else{
+                throw new Exception("El Token de usuario no es valido");
             }
-        }
-        if(count($missing_fields)>0) {
-            throw new Exception("Campos requeridos faltantes: ".implode(",",$missing_fields));
+
+        }catch(Exception $e) {
+            $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
         }
     }
 
@@ -117,3 +90,4 @@ class participante_login {
         return $this->participante;
     }
 }
+

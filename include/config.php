@@ -10,6 +10,7 @@ $defaultValues = array(
     '_DB_PASS' => 'revoluti0n',
     '_DB_CONN_ERROR_RETRIES'=>2,
     '_DEFAULT_LIST_LIMIT'=>50,
+    '_TOKEN_SECRET'=>'OnceTheStone'
 );
 
 //-- Redefinir con los defaultValues lo que no haya en config.local

@@ -1,6 +1,7 @@
 <?php
 
 function __autoload($class) {
+
     if (substr($class, 0, strlen(__NAMESPACE__)) != __NAMESPACE__)
         return false;
 
