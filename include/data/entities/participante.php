@@ -21,6 +21,7 @@ class Participante {
     public $email;
     public $nivel;
     public $password;
+    public $escuela;
     public $created_date;
     public $last_update;
     public $last_login;
@@ -73,12 +74,13 @@ class Participante {
 
         $db = new \CongresoDataAccess();
 
-        $q = "INSERT INTO participantes (nombre,apellido,dni,localidad,email,nivel,password,created_date) values ";
+        $q = "INSERT INTO participantes (nombre,apellido,dni,localidad,escuela,email,nivel,password,created_date) values ";
         $q .= "(";
         $q .= "'".$db->escape($this->nombre)."',";
         $q .= "'".$db->escape($this->apellido)."',";
         $q .= "'".$db->escape($this->dni)."',";
         $q .= "'".$db->escape($this->localidad)."',";
+        $q .= "'".$db->escape($this->escuela)."',";
         $q .= "'".$db->escape($this->email)."',";
         $q .= "'".$db->escape($this->nivel)."',";
         $q .= "'".$db->escape($this->password)."',";
@@ -97,6 +99,7 @@ class Participante {
         $q .= "apellido='".$db->escape($this->apellido)."',";
         $q .= "dni='".$db->escape($this->dni)."',";
         $q .= "localidad='".$db->escape($this->localidad)."',";
+        $q .= "escuela='".$db->escape($this->escuela)."',";
         $q .= "email='".$db->escape($this->email)."',";
         $q .= "nivel='".$db->escape($this->nivel)."',";
         $q .= "password='".$db->escape($this->password)."',";

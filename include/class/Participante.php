@@ -88,7 +88,7 @@ class Participante {
         }
 
         if(\Congreso\entities\Participante::emailExists($datos["email"])) {
-            throw new \Exception("Error validando datos del participante. El email ya está registrado.");
+            throw new \Exception("Error validando datos del participante. El email ya se encuentra registrado.");
         }
 
         //-- Acomodamos las mayusculas/minusculas de algunos campos

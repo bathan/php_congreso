@@ -9,17 +9,18 @@ include_once __DIR__ . '/participante_register.php';
  * Este file es donde todos los POST de acciones de Participantes van a ir y dependiendo del action se definirá a donde va a parar
  */
 
+$post_data = json_decode(file_get_contents('php://input'),true);
 
-if($_POST) {
+if($post_data) {
     try {
-        $base_form = new form_action_base($_POST);
+        $base_form = new form_action_base($post_data);
         $participante_action = null;
         $result = null;
 
         switch($base_form->getAction()) {
             case form_action_base::ACTION_LOGIN_REGULAR:
             case form_action_base::ACTION_LOGIN_TOKEN: {
-                $participante_action = new participante_login($_POST);
+                $participante_action = new participante_login($post_data);
 
                 $_SESSION["user_token"] = $participante_action->getParticipante()["user_token"];
 
@@ -27,7 +28,7 @@ if($_POST) {
             }
             case form_action_base::ACTION_REGISTER:
             case form_action_base::ACTION_UPDATE_INFO: {
-                $participante_action = new participante_register($_POST);
+                $participante_action = new participante_register($post_data);
                 break;
             }
             case form_action_base::ACTION_LOGOUT: {
