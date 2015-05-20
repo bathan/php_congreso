@@ -26,7 +26,7 @@ $(document).ready(function() {
         if(escuela=='') { errores.push('Escuela'); }
         if(nivel==0) {errores.push('Nivel');}
 
-        /*
+
         if(errores.length > 0) {
             alert('Debe completar los siguientes campos: ' + errores.join(', '));
             return;
@@ -42,7 +42,7 @@ $(document).ready(function() {
                 return;
             }
         }
-*/
+
         //-- Si llegamos a este momento es que todas las validaciones han sido correctas.
         var dataString = JSON.stringify({
                         nombre: nombre,
