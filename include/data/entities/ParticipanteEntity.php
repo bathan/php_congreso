@@ -1,12 +1,8 @@
 <?php
-namespace Congreso\entities;
-
 require_once _CONGRESO_DATA_ACCESS_PATH;
+require_once _UTILITIES_PATH;
 
-use CongresoDataAccess;
-use Congreso\Logica\Utilities;
-
-class Participante {
+class ParticipanteEntity {
 
     const NIVEL_PRIMARIO = 'Primario';
     const NIVEL_SECUNDARIO = 'Secundario';
@@ -40,7 +36,7 @@ class Participante {
     }
     public function fromDatabase($id) {
         try {
-            $db = new \CongresoDataAccess();
+            $db = new CongresoDataAccess();
             $q = "select * from participantes where id='".$db->escape($id)."'";
             $db_resource = $db->executeAndFetchSingle($q);
             if($db_resource) {
@@ -48,6 +44,7 @@ class Participante {
             }else{
                 throw new \Exception("No se encuentra al participante ".$id,1000);
             }
+
         }catch(\Exception $e) {
             throw $e;
         }
@@ -59,7 +56,6 @@ class Participante {
     }
 
     public function toJSON() {
-
         if($this->id > 0) {
             $json_string = json_encode(get_object_vars($this),JSON_PRETTY_PRINT);
         }else{
@@ -72,7 +68,7 @@ class Participante {
 
     public function toDatabase() {
 
-        $db = new \CongresoDataAccess();
+        $db = new CongresoDataAccess();
 
         $q = "INSERT INTO participantes (nombre,apellido,dni,localidad,escuela,email,nivel,password,created_date) values ";
         $q .= "(";
@@ -92,7 +88,7 @@ class Participante {
     }
 
     public function update() {
-        $db = new \CongresoDataAccess();
+        $db = new CongresoDataAccess();
 
         $q = " UPDATE participantes SET ";
         $q .= "nombre='".$db->escape($this->nombre)."',";
@@ -112,14 +108,14 @@ class Participante {
     }
 
     public function delete() {
-        $db = new \CongresoDataAccess();
+        $db = new CongresoDataAccess();
         $q = "delete from participantes where id=".$this->id;
         $db->execute($q);
     }
 
     public function fromDatabaseWithCredentials($email,$password) {
         try {
-            $db = new \CongresoDataAccess();
+            $db = new CongresoDataAccess();
             $q = "select * from participantes where email='".$db->escape($email)."' and password='".$db->escape($password)."'";
             $db_resource = $db->executeAndFetchSingle($q);
             if(!is_null($db_resource)) {
@@ -134,7 +130,7 @@ class Participante {
 
     public static function emailExists($email) {
         try {
-            $db = new \CongresoDataAccess();
+            $db = new CongresoDataAccess();
             $q = "select * from participantes where LOWER(email)='".$db->escape(strtolower($email))."'";
             $db_resource = $db->executeAndFetchSingle($q);
             if($db_resource) {
@@ -152,7 +148,7 @@ class Participante {
      */
     public static function listParticipantes($from=0,$limit=_DEFAULT_LIST_LIMIT,Array $filtros=null,Array $orden = null,$count=false) {
         try {
-            $db = new \CongresoDataAccess();
+            $db = new CongresoDataAccess();
 
             $response_array = ["orderby"=>$orden,"rows"=>[]];
 

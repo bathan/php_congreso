@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../form_action_base.php';
+require_once _PARTICIPANTE_LOGIC_PATH;
 
 /**
  * Class participante_login
@@ -43,7 +44,7 @@ class participante_login extends form_action_base{
             $email = $formData['email'];
             $password = $formData['password'];
 
-            $p_logic = New \Congreso\Logica\Participante();
+            $p_logic = New ParticipanteLogic();
             $p = $p_logic->loginParticipante($email,$password);
 
             unset($p['password']);
@@ -65,7 +66,7 @@ class participante_login extends form_action_base{
             $this->validateRequiredFields(['token']);
             $token = $formData['token'];
 
-            $p_logic = new \Congreso\Logica\Participante();
+            $p_logic = new ParticipanteLogic();
             if($token_data = $p_logic->validateUserToken($token)) {
 
                 $id = $token_data["id"];

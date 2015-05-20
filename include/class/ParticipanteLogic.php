@@ -1,8 +1,7 @@
 <?php
-namespace Congreso\Logica;
+require_once _PARTICIPANTE_ENTITY_PATH;
 
-
-class Participante {
+class ParticipanteLogic {
 
     const PASSWORD_LENGTH = 8;
 
@@ -10,7 +9,7 @@ class Participante {
 
     }
     /*
-     * Agrega un participante a la bbdd creando un password usando el email y DNI como SALT
+     * Agrega un participante a la bbdd
      */
     public function agregarParticipante(Array $datos) {
 
@@ -22,7 +21,7 @@ class Participante {
             $this->validarDatosParticipante($datos);
 
             //-- Insertar en la bbdd
-            $p = new \Congreso\entities\Participante();
+            $p = new ParticipanteEntity();
             $p->fromArray($datos);
             $new_id = $p->toDatabase();
 
@@ -30,7 +29,7 @@ class Participante {
             $this->actualizarParticipante($new_id,['user_token'=>$this->createUserToken($new_id)]);
 
             //-- Enviamos email al participante avisando que se dió de alta correctamente
-            $this->sendWelcomeEmail($new_id);
+            //$this->sendWelcomeEmail($new_id);
 
             return $new_id;
 
@@ -44,7 +43,7 @@ class Participante {
         try {
 
             //-- Insertar en la bbdd
-            $p = new \Congreso\entities\Participante();
+            $p = new ParticipanteEntity();
             $p->fromDatabase($id);
 
             foreach($datos_a_actualizar as $d=>$v) {
@@ -87,7 +86,7 @@ class Participante {
             throw new \Exception("Error validando datos del participante. El email no es valido.");
         }
 
-        if(\Congreso\entities\Participante::emailExists($datos["email"])) {
+        if(ParticipanteEntity::emailExists($datos["email"])) {
             throw new \Exception("Error validando datos del participante. El email ya se encuentra registrado.");
         }
 
@@ -108,7 +107,7 @@ class Participante {
     public function loginParticipante($email,$password) {
 
         try {
-            $p = new \Congreso\entities\Participante();
+            $p = new ParticipanteEntity();
             $p->fromDatabaseWithCredentials($email,$password);
             $this->actualizarParticipante($p->id,['last_login'=>date("Y-m-d H:i:s")]);
 
@@ -123,7 +122,7 @@ class Participante {
      */
     public function changePassword($id,$oldPassword,$newPassword) {
         //-- Obtenemos el usuario por id
-        $p = new \Congreso\entities\Participante();
+        $p = new ParticipanteEntity();
         $p->fromDatabase($id);
 
         //-- Validamos contraseña vieja vs nueva
@@ -148,6 +147,10 @@ class Participante {
         }
         //-- Quitamos caracteres NO alfanumericos
         $string = preg_replace("/[^A-Za-z0-9 ]/", '', $string);
+
+        //-- Quitamos espacios
+        $string = str_replace(' ','',$string);
+        
 
         //-- Devolvemos una porción del string
         return substr(str_shuffle($string),0,$length);
@@ -211,13 +214,46 @@ class Participante {
 
     public function sendWelcomeEmail($id) {
 
+        $participante = $this->obtenerParticipante($id);
+        $nombre_y_apellido = $participante["nombre"]." ".$participante["apellido"];
+
+        $mail = new \PHPMailer();
+
+        $mail->SMTPDebug = 3;                               // Enable verbose debug output
+
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = _SMTP_SERVER;  // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = _SMTP_USER_NAME;                 // SMTP username
+        $mail->Password = _SMTP_USER_PASS;                           // SMTP password
+        $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 25;                                    // TCP port to connect to
+
+        $mail->From = _EMAIL_FROM;
+        $mail->FromName = _EMAIL_FROM_NAME;
+        $mail->addAddress($participante["email"], $nombre_y_apellido);     // Add a recipient
+        //$mail->addReplyTo(_EMAIL_FROM, _EMAIL_FROM_NAME);
+        //$mail->addCC(_EMAIL_FROM);
+        $mail->isHTML(true);                                  // Set email format to HTML
+
+        $mail->Subject = 'Here is the subject';
+        $mail->Body    = 'This is the HTML message body <pre>'.print_r($participante,true).'</pre>';
+        $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+        if(!$mail->send()) {
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+        } else {
+            echo 'Message has been sent';
+        }
+
     }
 
     /*
      * Obtiene un Array con los datos de un participante
      */
     public function obtenerParticipante($id) {
-        $p = new \Congreso\entities\Participante();
+        $p = new ParticipanteEntity();
         $p->fromDatabase($id);
         return $p->toArray();
     }
@@ -227,7 +263,7 @@ class Participante {
      */
     public function eliminarParticipante($id) {
         if(intval($id) >0 ) {
-            $p = new \Congreso\entities\Participante();
+            $p = new ParticipanteEntity();
             $p->fromDatabase($id);
             $p->delete();
         }else{
@@ -252,7 +288,7 @@ class Participante {
             if(is_null($orden)) {
                 $orden = ["c"=>"id","d"=>"ASC"];
             }
-            return \Congreso\entities\Participante::listParticipantes($from,$limit,$filtros,$orden);
+            return ParticipanteEntity::listParticipantes($from,$limit,$filtros,$orden);
         }catch(\Exception $e) {
             throw $e;
         }
@@ -271,7 +307,7 @@ class Participante {
         $this->validarFiltros($filtros);
 
         try {
-            return \Congreso\entities\Participante::listParticipantes(0,null,$filtros,null,true);
+            return ParticipanteEntity::listParticipantes(0,null,$filtros,null,true);
         }catch(\Exception $e) {
             throw $e;
         }

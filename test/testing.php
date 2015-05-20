@@ -1,43 +1,47 @@
 <?php
 include_once __DIR__ . '/../include/config.php';
+require_once _PARTICIPANTE_LOGIC_PATH;
 
-
-$p_logic = new \Congreso\Logica\Participante();
-$datos = ["nombre"=>"juan","apellido"=>"perez","dni"=>12345678,"email"=>"juan@merman.com"];
+$p_logic = new ParticipanteLogic();
+$datos = ["nombre"=>"juan","apellido"=>"perez","dni"=>12345678,"email"=>"bathan@gmail.com","escuela"=>"nuestra señora del daño"];
 
 try {
-    /*
     $nuevo_id = $p_logic->agregarParticipante($datos);
 
     echo "****** nuevo id=".$nuevo_id."\n";
 
-    $participante = $p_logic->obtenerParticipante($nuevo_id);
+    /*
 
-    echo "****** PARTICIPANTE RAW \n";
+        $participante = $p_logic->obtenerParticipante($nuevo_id);
 
-    pretty_print($participante);
+        echo "****** PARTICIPANTE RAW \n";
 
-    $oldPassword = $participante["password"];
+        pretty_print($participante);
 
-    $p_logic->changePassword($nuevo_id,$oldPassword,"mierda_puta");
+        $oldPassword = $participante["password"];
 
-    $participante = $p_logic->obtenerParticipante($nuevo_id);
+        $p_logic->changePassword($nuevo_id,$oldPassword,"mierda_puta");
 
-    echo "****** PARTICIPANTE UPDATED \n";
+        $participante = $p_logic->obtenerParticipante($nuevo_id);
 
-    pretty_print($participante);
+        echo "****** PARTICIPANTE UPDATED \n";
 
-    echo "****** PARTICIPANTE TOKEN\n";
+        pretty_print($participante);
 
-    echo $token = $p_logic->createUserToken($nuevo_id);
+        echo "****** PARTICIPANTE TOKEN\n";
 
-    echo "***** PARTICIPANTE EMAIL Y ID EN BASE AL TOKEN\n";
+        echo $token = $p_logic->createUserToken($nuevo_id);
 
-    pretty_print($p_logic->validateUserToken($token));
-*/
-    $resultado = $p_logic->listParticipantes();
+        echo "***** PARTICIPANTE EMAIL Y ID EN BASE AL TOKEN\n";
 
-    var_dump($resultado);
+        pretty_print($p_logic->validateUserToken($token));
+
+        $resultado = $p_logic->listParticipantes();
+
+        var_dump($resultado);
+    */
+
+    $p_logic->sendWelcomeEmail($nuevo_id);
 
 
 }catch(Exception $e) {

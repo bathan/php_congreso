@@ -1,5 +1,4 @@
 <?php
-namespace Congreso\Logica;
 
 class Utilities {
 
@@ -69,8 +68,10 @@ class Utilities {
     }
 
     public static function populateClassFromArray(&$class,$array) {
+
         foreach($array as $key=>$value) {
             if(property_exists($class,$key)) {
+
                 $class->$key = $value;
             }
         }

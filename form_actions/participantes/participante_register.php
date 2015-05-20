@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../form_action_base.php';
+require_once _PARTICIPANTE_LOGIC_PATH;
+require_once _UTILITIES_PATH;
 
 /**
  * Class participante_register
@@ -18,11 +20,11 @@ class participante_register extends form_action_base{
 
             switch ($this->action) {
                 case self::ACTION_REGISTER: {
-                    $this->participante = $this->registerParticipante($formData);
+                    $this->registerParticipante($formData);
                     break;
                 }
                 case self::ACTION_UPDATE_INFO: {
-                    $this->participante = $this->updateParticipanteInfo($formData);
+                    $this->updateParticipanteInfo($formData);
                     break;
                 }
 
@@ -46,11 +48,11 @@ class participante_register extends form_action_base{
             $this->validateRequiredFields(['nombre','apellido','dni','email']);
 
             //-- Validar Email
-            if(!\Congreso\Logica\Utilities::isValidEmail($formData["email"])) {
+            if(!Utilities::isValidEmail($formData["email"])) {
                 throw new Exception("Dirección de Email Invalida");
             }
 
-            $p_logic = New \Congreso\Logica\Participante();
+            $p_logic = New ParticipanteLogic();
             $id_nuevo = $p_logic->agregarParticipante($formData);
             $p = $p_logic->obtenerParticipante($id_nuevo);
 
@@ -69,7 +71,7 @@ class participante_register extends form_action_base{
             $this->validateRequiredFields(['user_token']);
 
             //-- Validate that this token is from today
-            $p_logic = new \Congreso\Logica\Participante();
+            $p_logic = new ParticipanteLogic();
             $user_token = $p_logic->validateUserToken($formData['user_token']);
 
             if(is_null($user_token)) {
@@ -81,7 +83,7 @@ class participante_register extends form_action_base{
             }
 
             //-- Validar Email
-            if((isset($formData["email"]) && $formData["email"] != '') && !\Congreso\Logica\Utilities::isValidEmail($formData["email"])) {
+            if((isset($formData["email"]) && $formData["email"] != '') && !Utilities::isValidEmail($formData["email"])) {
                 throw new Exception("Dirección de Email Invalida");
             }
 
