@@ -2,7 +2,18 @@ $(document).ready(function() {
 
     $('#confirmacion').hide();
 
+    var button_running = false;
+
+
     $('#btnRegister').click(function (e) {
+
+        if(button_running==true) {
+            return;
+        }else{
+            button_running = true;
+        }
+
+        $('#btnRegister').attr("disabled", true);
 
         //-- Obtener los datos del form
         var action = $('#action').val();
@@ -28,16 +39,22 @@ $(document).ready(function() {
 
 
         if(errores.length > 0) {
+            button_running = false;
+            $('#btnRegister').attr("disabled", false);
             alert('Debe completar los siguientes campos: ' + errores.join(', '));
             return;
         }
 
         //-- Validación de Email y su confirmación
         if(!isValidEmail(email)) {
+            button_running = false;
+            $('#btnRegister').attr("disabled", false);
             alert('El email ingresado no es valido');
             return;
         }else{
             if(email != email_confirm) {
+                button_running = false;
+                $('#btnRegister').attr("disabled", false);
                 alert('El email no fué confirmado correctamente');
                 return;
             }
@@ -55,27 +72,27 @@ $(document).ready(function() {
                         action: action
                     });
 
-                    $(this).css({'cursor' : 'wait'});
+        var posting = $.post( "/form_actions/participantes/index.php", dataString );
 
-                    var posting = $.post( "/form_actions/participantes/index.php", dataString );
+        // Put the results in a div
+        posting.done(function( data ) {
+            var response = jQuery.parseJSON(data);
 
-                      // Put the results in a div
-                      posting.done(function( data ) {
-                        var response = jQuery.parseJSON(data);
-                            if(response.status=='error') {
-                                alert(response.data);
-                            }
+            if(response.status=='error') {
+                alert(response.data);
+            }
 
-                            if(response.status=='ok') {
-                                //-- Ocultar el form de Registro y mostrar el div de gracias
-                                $('#formulario_inscripcion').hide();
-                                $('#submit-button').hide();
-                                $('#contact-form').trigger("reset");
-                                $('#confirmacion').show();
-                            }
-                        });
+            if(response.status=='ok') {
+                //-- Ocultar el form de Registro y mostrar el div de gracias
+                $('#formulario_inscripcion').hide();
+                $('#submit-button').hide();
+                $('#contact-form').trigger("reset");
+                $('#confirmacion').show();
+                $("#btnRegister").attr("disabled", true);
+            }
+        });
 
-                      $(this).css({'cursor' : 'default'});
+        button_running = false;
     });
 
 });
