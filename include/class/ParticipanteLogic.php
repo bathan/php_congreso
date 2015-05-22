@@ -14,6 +14,7 @@ class ParticipanteLogic {
     public function agregarParticipante(Array $datos) {
 
         try {
+
             //-- Definimos un password inicial
             $datos['password'] = $this->createInitialPassword($datos);
 
@@ -22,7 +23,9 @@ class ParticipanteLogic {
 
             //-- Insertar en la bbdd
             $p = new ParticipanteEntity();
+
             $p->fromArray($datos);
+
             $new_id = $p->toDatabase();
 
             //-- Creamos el Token del Usuario
@@ -91,12 +94,14 @@ class ParticipanteLogic {
         }
 
         //-- Acomodamos las mayusculas/minusculas de algunos campos
+        /*
         $campos = ['localidad','nombre','apellido'];
         foreach($campos as $c) {
             if(isset($datos[$c]) && strlen($datos[$c])>0) {
                 $datos[$c] = ucwords(strtolower($datos[$c]));
             }
         }
+        */
 
         return;
     }

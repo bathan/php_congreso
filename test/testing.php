@@ -39,9 +39,11 @@ try {
         $resultado = $p_logic->listParticipantes();
 
         var_dump($resultado);
+
+        $p_logic->sendWelcomeEmail($nuevo_id);
     */
 
-    $p_logic->sendWelcomeEmail($nuevo_id);
+
 
 
 }catch(Exception $e) {

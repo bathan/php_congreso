@@ -195,7 +195,7 @@ class ParticipanteEntity {
                 if(count($db_resource)>0) {
                     $rows = [];
                     foreach($db_resource as $res) {
-                        $p = new Participante();
+                        $p = new ParticipanteEntity();
                         Utilities::populateClassFromArray($p,$res);
                         $rows[$res["id"]] = $p->toArray();
                     }
