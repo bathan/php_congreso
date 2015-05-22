@@ -2,9 +2,11 @@
 session_start();
 
 include_once __DIR__ . '/../include/config.php';
+require_once _PARTICIPANTE_LOGIC_PATH;
+require_once _UTILITIES_PATH;
 
 
-$pl = new \Congreso\Logica\Participante();
+$pl = new ParticipanteLogic();
 
 ?>
 
@@ -142,7 +144,7 @@ try {
     <?php
     if($total > 0) {
 
-        $query_string = \Congreso\Logica\Utilities::purifyQueryString(['page']);
+        $query_string = Utilities::purifyQueryString(['page']);
 
         // The "back" link
         $prevlink = ($page > 1) ? '<a href="?'.$query_string.'&page=1" title="First page">&laquo;</a> <a href="?'.$query_string.'&page=' . ($page - 1) . '" title="Previous page">&lsaquo;</a>' : '<span class="disabled">&laquo;</span> <span class="disabled">&lsaquo;</span>';
