@@ -6,9 +6,13 @@ $p_logic = new ParticipanteLogic();
 $datos = ["nombre"=>"juan","apellido"=>"perez","dni"=>12345678,"email"=>"bathan@gmail.com","escuela"=>"nuestra señora del daño"];
 
 try {
-    $nuevo_id = $p_logic->agregarParticipante($datos);
+    //$nuevo_id = $p_logic->agregarParticipante($datos);
 
-    echo "****** nuevo id=".$nuevo_id."\n";
+   // echo "****** nuevo id=".$nuevo_id."\n";
+
+
+    $counts = $p_logic->getPartipanteCounts();
+    var_dump($counts);
 
     /*
 

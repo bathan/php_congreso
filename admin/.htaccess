@@ -1,5 +1,0 @@
-AuthName "Restricted Area" 
-AuthType Basic 
-AuthUserFile /webcp/docs/webs/241238/www/admin/.htpasswd 
-AuthGroupFile /dev/null 
-require valid-user

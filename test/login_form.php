@@ -71,6 +71,9 @@ try {
     if(isset($_GET["sort_field"]) && strlen($_GET["sort_field"])>0) {
         $orderBy["c"] = $_GET["sort_field"];
         $orderBy["d"] = $_GET["sort_direction"];
+    }else{
+        $orderBy["c"] = "id";
+        $orderBy["d"] = "asc";
     }
 
     $filtros = [];
@@ -82,32 +85,42 @@ try {
         }
     }
 
+
     $from = 0;
     $limit = isset($_GET["limit"]) ? $_GET["limit"] : _DEFAULT_LIST_LIMIT;
+
     if($limit==0) {
         $limit = null;
     }
 
     $total = $pl->countParticipantes($filtros);
 
+
     if($total > 0) {
-        // How many pages will there be
-        $pages = ceil($total / $limit);
 
-        // What page are we currently on?
-        $page = min($pages, filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, array(
-            'options' => array(
-                'default'   => 1,
-                'min_range' => 1,
-            ),
-        )));
+        if($limit) {
+            // How many pages will there be
+            $pages = ceil($total / $limit);
 
-        // Calculate the offset for the query
-        $offset = ($page - 1)  * $limit;
+            // What page are we currently on?
+            $page = min($pages, filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, array(
+                'options' => array(
+                    'default'   => 1,
+                    'min_range' => 1,
+                ),
+            )));
 
-        // Some information to display to the user
-        $start = $offset + 1;
-        $end = min(($offset + $limit), $total);
+            // Calculate the offset for the query
+            $offset = ($page - 1)  * $limit;
+
+            // Some information to display to the user
+            $start = $offset + 1;
+            $end = min(($offset + $limit), $total);
+        }else{
+            $start = 1;
+            $end =1;
+            $offset = 0;
+        }
 
         $resultado = $pl->listParticipantes($offset,$limit,$filtros,$orderBy);
 

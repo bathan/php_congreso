@@ -158,24 +158,51 @@ class ParticipanteEntity {
                 $q = "select * from participantes ";
             }
 
+            $q .= " WHERE 1=1 ";
+
+            $magic_filter_value = null;
+
             if(!is_null($filtros) && count($filtros)>0) {
 
-                $q .= " WHERE 1=1 AND ";
 
                 $filter_array = [];
 
                 foreach($filtros as $campo=>$valor) {
+                    if($campo=='magic') {
+                        $magic_filter_value = $valor;
+                        continue;
+                    }
                     $filter_array[]= $campo." like '%".$valor."%'";
                 }
 
-                $q .= implode(' AND ',$filter_array);
+                if(count($filter_array)>0) {
+                    $q .= " AND ";
+                    $q .= implode(' AND ',$filter_array);
+                }
+
             }
 
+            if($magic_filter_value) {
+                //-- Find by all fields
+                $q .= " AND ( ";
+
+                $q .= " ( nombre like '%$magic_filter_value%' ) OR ";
+                $q .= " ( apellido like '%$magic_filter_value%' ) OR ";
+                $q .= " ( dni like '%$magic_filter_value%' ) OR ";
+                $q .= " ( localidad like '%$magic_filter_value%' ) OR";
+                $q .= " ( escuela like '%$magic_filter_value%' ) ";
+                $q .= " ) ";
+            }
+
+
             if(!$count && $orden && count($orden)>0) {
+                if($orden["c"]=='nivel') {
+                    $orden["c"] = ' CAST(nivel as char) ';
+                }
                 $q .=" ORDER BY ".$orden["c"]." ".$orden["d"]." ";
             }
 
-            if(!$count && $limit) {
+            if(!$count && $limit > 0) {
                 if($from==0) {
                     $q .= " LIMIT ".$limit;
                 }else{
@@ -184,7 +211,7 @@ class ParticipanteEntity {
             }
 
             if(_APP_DEBUG) {
-                echo "<pre>".$q."</pre>";
+            //    echo "<pre>".$q."</pre>";
             }
 
             if($count) {
@@ -203,6 +230,7 @@ class ParticipanteEntity {
                     $response_array["rows"] = $rows;
                 }
             }
+
             return $response_array;
 
         }catch(\Exception $e) {

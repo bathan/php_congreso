@@ -2,3 +2,7 @@
 .project
 .idea
 tests/
+test/.htaccess
+test/.htpasswd
+admim/.htpasswd
+admin/.htaccess

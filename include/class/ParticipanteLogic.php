@@ -329,7 +329,7 @@ class ParticipanteLogic {
     private function validarFiltros(Array $filtros) {
         if($filtros && count($filtros)>0) {
             //-- Validar que no manden fitros cualquiera
-            $valid_filters = ['nombre','apellido','dni','localidad','email','nivel'];
+            $valid_filters = ['nombre','apellido','dni','localidad','email','nivel','magic'];
 
             foreach($filtros as $columna=>$valor) {
                 if(!in_array($columna,$valid_filters)) {
@@ -337,6 +337,34 @@ class ParticipanteLogic {
                 }
             }
         }
+    }
+
+    public function getPartipanteCounts() {
+
+        $pe = New ParticipanteEntity();
+
+        $list = $pe->listParticipantes(0,-1);
+
+        $counts = ["localidades"=>0,"escuelas"=>0,"participantes"=>0];
+
+        $escuelas = [];
+        $localidades = [];
+
+        $counts["participantes"] = count($list);
+
+        foreach($list["rows"] as $p_id=>$p) {
+            $escuelas[] = strtolower($p["escuela"]);
+            $localidades[] = strtolower($p["localidad"]);
+        }
+
+        $escuelas = array_unique($escuelas);
+        $localidades = array_unique($localidades);
+
+        $counts["localidades"] = count($localidades);
+        $counts["escuelas"] = count($escuelas);
+
+        return $counts;
+
     }
 
 
