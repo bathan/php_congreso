@@ -1,5 +1,6 @@
 <?php
-include_once __DIR__ . '/../../include/config.php';
+
+include_once __DIR__ . '/../../seeker.php';
 
 $file_name = "excel_export_".date("Ymd_His");
 $file_ending = "xls";
@@ -9,8 +10,6 @@ header("Content-Type: application/xls");
 header("Content-Disposition: attachment; filename=$file_name.xls");
 header("Pragma: no-cache");
 header("Expires: 0");
-$pl = new \Congreso\Logica\Participante();
-$resultado = $pl->listParticipantes();
 
 /*******Start of Formatting for Excel*******/
 //define separator (defines columns in excel & tabs in word)
@@ -19,8 +18,8 @@ $sep = "\t"; //tabbed character
 
 $rows = $resultado["rows"];
 
-$columns = array_keys(end($rows));
-reset($rows);
+$columns = ['id','nombre','apellido','dni','localidad','email','nivel','escuela'];
+
 foreach($columns as $c) {
     echo $c."\t";
 }
@@ -31,6 +30,9 @@ foreach($rows as $row) {
     $schema_insert = '';
 
     foreach ($row as $col => $val) {
+        if(!in_array($col,$columns)) {
+            continue;
+        }
         if (is_null($val)) {
             $schema_insert .= "NULL" . $sep;
         } elseif ($val != '') {

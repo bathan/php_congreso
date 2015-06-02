@@ -350,7 +350,7 @@ class ParticipanteLogic {
         $escuelas = [];
         $localidades = [];
 
-        $counts["participantes"] = count($list);
+        $counts["participantes"] = count($list["rows"]);
 
         foreach($list["rows"] as $p_id=>$p) {
             $escuelas[] = strtolower($p["escuela"]);
