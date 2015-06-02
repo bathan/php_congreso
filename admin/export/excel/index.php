@@ -1,11 +1,13 @@
 <?php
 
+
 include_once __DIR__ . '/../../seeker.php';
 
 $file_name = "excel_export_".date("Ymd_His");
 $file_ending = "xls";
 
 //header info for browser
+header('Content-Type: text/html; charset=utf-8');
 header("Content-Type: application/xls");
 header("Content-Disposition: attachment; filename=$file_name.xls");
 header("Pragma: no-cache");
@@ -44,7 +46,10 @@ foreach($rows as $row) {
     $schema_insert = str_replace($sep . "$", "", $schema_insert);
     $schema_insert = preg_replace("/\r\n|\n\r|\n|\r/", " ", $schema_insert);
     $schema_insert .= "\t";
-    print(trim($schema_insert));
+
+    print  mb_convert_encoding(trim($schema_insert), 'UTF-16LE', 'UTF-8');
+
+    //print(trim($schema_insert));
     print "\n";
 }
 ?>

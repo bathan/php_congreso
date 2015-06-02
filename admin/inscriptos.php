@@ -136,7 +136,7 @@ include_once __DIR__ . '/seeker.php';
 						      </table>
 							  <table width="100%" border="0" cellspacing="0" cellpadding="0">
 							    <tr>
-							      <td width="50%" align="left"><div class="listados"><a href="/admin/export/excel/?<?=$_SERVER['QUERY_STRING']?>"><span class="icon fa-file-pdf-o"></span> Exportar</a></div></td>
+							      <td width="50%" align="left"><div class="listados"><a href="/admin/export/excel/?limit=<?=($total+100);?><?=$_SERVER['QUERY_STRING']?>"><span class="icon fa-file-pdf-o"></span> Exportar</a></div></td>
 							      <td width="50%" align="right">  <a href="#">&laquo;</a> <a href="#">&#8249;</a> <a href="#">&#8250;</a> <a href="#">&raquo;</a></td>
 						        </tr>
 						      </table>
