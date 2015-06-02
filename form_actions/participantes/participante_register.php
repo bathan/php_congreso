@@ -78,10 +78,6 @@ class participante_register extends form_action_base{
                 throw new Exception("Token de usuario invalido");
             }
 
-            if(date("Y-m-d")!=date("Y-m-d",strtotime($user_token['created']))) {
-                throw new Exception("Token de usuario expirado");
-            }
-
             //-- Validar Email
             if((isset($formData["email"]) && $formData["email"] != '') && !Utilities::isValidEmail($formData["email"])) {
                 throw new Exception("Dirección de Email Invalida");

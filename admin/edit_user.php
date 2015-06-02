@@ -1,3 +1,15 @@
+<?php
+
+include_once __DIR__ . '/../include/config.php';
+require_once _PARTICIPANTE_LOGIC_PATH;
+require_once _UTILITIES_PATH;
+
+$p_logic = new ParticipanteLogic();
+
+$participante = $p_logic->obtenerParticipante($_GET["id"]);
+
+?>
+
 <!DOCTYPE HTML>
 
 <html>
@@ -43,35 +55,42 @@
 								  <tr>
 								    <td align="left">Nombre</td>
 								    <td align="left"><label for="textfield"></label>
-							        <input name="textfield" type="text" id="textfield" value="Diego" ></td>
+							        <input name="nombre" type="text" id="nombre" value="<?=$participante["nombre"];?>" ></td>
 							      </tr>
 								  <tr>
 								    <td align="left">Apellido</td>
-								    <td align="left"><input name="textfield2" type="text" id="textfield2" value="Gimenez"></td>
+								    <td align="left"><input name="apellido" type="text" id="apellido" value="<?=$participante["apellido"];?>"></td>
 							      </tr>
 								  <tr>
 								    <td align="left">DNI</td>
-								    <td align="left"><input name="textfield3" type="text" id="textfield3" value="23186411"></td>
+								    <td align="left"><input name="dni" type="text" id="dni" value="<?=$participante["dni"];?>"></td>
 							      </tr>
 								  <tr>
 								    <td align="left">Localidad</td>
-								    <td align="left"><input name="textfield4" type="text" id="textfield4" value="Santa Rosa"></td>
+								    <td align="left"><input name="localidad" type="text" id="localidad" value="<?=$participante["localidad"];?>"></td>
 							      </tr>
 								  <tr>
 								    <td align="left">Email</td>
-								    <td align="left"><input name="textfield5" type="text" id="textfield5" value="diego@email.com"></td>
+								    <td align="left"><input name="email" type="text" id="email" value="<?=$participante["email"];?>"></td>
 							      </tr>
 								  <tr>
 								    <td align="left">Escuela</td>
-								    <td align="left"><input name="textfield6" type="text" id="textfield6" value="Normal"></td>
+								    <td align="left"><input name="escuela" type="text" id="escuela" value="<?=$participante["escuela"];?>"></td>
 							      </tr>
 								  <tr>
 								    <td align="left">Nivel</td>
-								    <td align="left"><input name="textfield6" type="text" id="textfield7" value="Primario"></td>
+								    <td align="left">
+                                        <select name="nivel" id="nivel">
+                                            <option value="Primario" <? if($participante["nivel"]=='Primario') { echo "selected"; } ?>>Primario</option>
+                                            <option value="Secundario" <? if($participante["nivel"]=='Secundario') { echo "selected"; } ?>>Secundario</option>
+                                            <option value="Estudiantes" <? if($participante["nivel"]=='Estudiantes') { echo "selected"; } ?>>Estudiantes</option>
+                                            <option value="Otros" <? if($participante["nivel"]=='Otros') { echo "selected"; } ?>>Otros</option>
+                                        </select>
+                                    </td>
 							      </tr>
 								  <tr>
 								    <td align="left">&nbsp;</td>
-								    <td align="left"><a href="inscriptos.php" class="button scrolly">Guardar</a></td>
+								    <td align="left"><a href="#" class="button scrolly" id="btn_guardar">Guardar</a></td>
 							      </tr>
 							  </table></form>
                             </header>
@@ -93,10 +112,51 @@
 
 			</div>
 
-		
-            
-        
-            
-  
-    </body>
+	</body>
+
+    <script language="JavaScript">
+
+        $(document).ready(function() {
+
+            $('#btn_guardar').click(function (e) {
+
+                 //-- Obtener los datos del form
+                var nombre = $('#nombre').val();
+                var apellido = $('#apellido').val();
+                var dni = $('#dni').val();
+                var localidad = $('#localidad').val();
+                var email = $('#email').val();
+                var nivel = $('#nivel').val();
+                var escuela = $('#escuela').val();
+                var action ='update_info';
+                var user_token = '<?=$participante["user_token"];?>';
+
+                 var dataString = JSON.stringify({
+                        nombre: nombre,
+                        apellido: apellido,
+                        dni: dni,
+                        localidad: localidad,
+                        email: email,
+                        nivel:  nivel,
+                        escuela:  escuela,
+                        action: action,
+                        user_token: user_token
+                    });
+
+                var posting = $.post( "/form_actions/participantes/index.php", dataString );
+
+                // Put the results in a div
+                posting.done(function( data ) {
+                    var response = jQuery.parseJSON(data);
+                    if(response.status=='error') {
+                        alert('Se ha producido un error al actualizar los datos del participante');
+                    }
+
+                    if(response.status=='ok') {
+                        alert('Participante actualizado con éxito');
+                    }
+                });
+            });
+        });
+    </script>
 </html>
