@@ -10,10 +10,7 @@ try {
 
    // echo "****** nuevo id=".$nuevo_id."\n";
 
-
-    $counts = $p_logic->getPartipanteCounts();
-    var_dump($counts);
-
+    echo date('d M Y H:i');
     /*
 
         $participante = $p_logic->obtenerParticipante($nuevo_id);

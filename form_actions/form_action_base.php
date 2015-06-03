@@ -8,6 +8,8 @@ class form_action_base {
     const ACTION_LOGIN_TOKEN = 'login_token';
     const ACTION_REGISTER = 'register';
     const ACTION_UPDATE_INFO = 'update_info';
+    const ACTION_FORUM_ADD = 'forum_add';
+    const ACTION_DELETE_USER = 'delete_user';
 
     protected $action;
     private $formData = [];

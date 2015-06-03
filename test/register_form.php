@@ -1,8 +1,12 @@
 <?php
+session_start();
 
 include_once __DIR__ . '/../include/config.php';
+require_once _PARTICIPANTE_LOGIC_PATH;
+require_once _UTILITIES_PATH;
 
-$pl = new \Congreso\Logica\Participante();
+
+$pl = new ParticipanteLogic();
 
 ?>
 
@@ -45,6 +49,14 @@ $pl = new \Congreso\Logica\Participante();
 </form>
 
 <hr/>
+
+<h2>Update Info Form Test</h2>
+<form name="forum_user_add" action="../form_actions/participantes/" method="POST">
+    user token: <input type="text" id="user_token" name="user_token" value="" />
+
+    <input type="hidden" id="action" name="action" value="forum_add">
+    <input type="submit" value="do_login">
+</form>
 
 
 

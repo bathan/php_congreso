@@ -10,6 +10,9 @@ include_once __DIR__ . '/participante_register.php';
  */
 
 $post_data = json_decode(file_get_contents('php://input'),true);
+if(is_null($post_data)) {
+    $post_data = $_POST;
+}
 
 if($post_data) {
     try {
@@ -26,6 +29,8 @@ if($post_data) {
 
                 break;
             }
+            case form_action_base::ACTION_DELETE_USER:
+            case form_action_base::ACTION_FORUM_ADD:
             case form_action_base::ACTION_REGISTER:
             case form_action_base::ACTION_UPDATE_INFO: {
                 $participante_action = new participante_register($post_data);

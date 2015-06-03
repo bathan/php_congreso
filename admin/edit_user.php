@@ -89,6 +89,14 @@ $participante = $p_logic->obtenerParticipante($_GET["id"]);
                                     </td>
 							      </tr>
 								  <tr>
+								    <td align="left">Foros</td>
+								    <td align="left">(foros en los que participo)</td>
+							      </tr>
+								  <tr>
+								    <td align="left">Trabajo</td>
+								    <td align="left"><a href="#">trabajo.pdf</a> (# votos)</td>
+							      </tr>
+								  <tr>
 								    <td align="left">&nbsp;</td>
 								    <td align="left"><a href="#" class="button scrolly" id="btn_guardar">Guardar</a></td>
 							      </tr>

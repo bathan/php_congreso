@@ -109,6 +109,9 @@ class ParticipanteEntity {
 
     public function delete() {
         $db = new CongresoDataAccess();
+
+        $q = " insert into participantes_borrados  select *,CURRENT_TIMESTAMP as deleted_date from participantes where id=".$this->id;
+        $db->execute($q);
         $q = "delete from participantes where id=".$this->id;
         $db->execute($q);
     }

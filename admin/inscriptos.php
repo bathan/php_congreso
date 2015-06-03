@@ -64,7 +64,7 @@ include_once __DIR__ . '/seeker.php';
                                       <?php
                                         if($total>0) {
                                             ?>
-                                            Mostrando <?= $start; ?>-<?= $end; ?> de <?= $total; ?> entradas
+                                            Mostrando <?= $start; ?>-<?= $end; ?> de <?= $total; ?> inscriptos
 
                                         <?php
                                         }
@@ -106,6 +106,7 @@ include_once __DIR__ . '/seeker.php';
                                   <?php
                                   if($resultado && $resultado["rows"]>0) {
                                     foreach($resultado["rows"] as $p) {
+
 ?>
 
                                         <tr>
@@ -118,7 +119,7 @@ include_once __DIR__ . '/seeker.php';
                                             <td class="izquierda"><a href="mailto:<?=$p["email"];?>"><?=$p["email"];?></a></td>
                                             <td class="izquierda"><?=$p["escuela"];?></td>
                                             <td class="izquierda"><?=$p["nivel"];?></td>
-                                            <td align="center" valign="middle" nowrap><a href="delete_user.php?id=<?=$p["id"];?>"><span class="icon fa-trash"></span></a></td>
+                                            <td align="center" valign="middle" nowrap><a href="javascript:deleteInscripto('<?=$p["user_token"];?>');"><span class="icon fa-trash"></span></a></td>
                                         </tr>
 
 
@@ -136,8 +137,8 @@ include_once __DIR__ . '/seeker.php';
 						      </table>
 							  <table width="100%" border="0" cellspacing="0" cellpadding="0">
 							    <tr>
-							      <td width="50%" align="left"><div class="listados"><a href="/admin/export/excel/?limit=<?=($total+100);?><?=$_SERVER['QUERY_STRING']?>"><span class="icon fa-file-pdf-o"></span> Exportar</a></div></td>
-							      <td width="50%" align="right">  <a href="#">&laquo;</a> <a href="#">&#8249;</a> <a href="#">&#8250;</a> <a href="#">&raquo;</a></td>
+							      <td width="50%" align="left"><div class="listados"><a href="/admin/export/excel/?limit=<?=($total+100);?>&<?=$_SERVER['QUERY_STRING']?>"><span class="icon fa-file-pdf-o"></span> Exportar</a></div></td>
+							      <td width="50%" align="right"> <?php echo $prevlink."&nbsp;".$nextlink ?></td>
 						        </tr>
 						      </table>
 							</div>
@@ -164,7 +165,28 @@ include_once __DIR__ . '/seeker.php';
         <script>
 
 
+        function deleteInscripto(user_token) {
 
+            if(confirm('¿Está seguro que desea eliminar al participante?')) {
+                var dataString = JSON.stringify({action: 'delete_user',user_token: user_token});
+
+                var posting = $.post( "/form_actions/participantes/index.php", dataString );
+
+                // Put the results in a div
+                posting.done(function( data ) {
+                    var response = jQuery.parseJSON(data);
+                    if(response.status=='error') {
+                        alert('Se ha producido un error al eliminar participante');
+                    }
+
+                    if(response.status=='ok') {
+                        alert('Participante eliminado con éxito');
+                        location.reload();
+                    }
+                });
+            }
+
+        }
 
         function doNivelSearch(nivel) {
             var uri = cleanUri();
