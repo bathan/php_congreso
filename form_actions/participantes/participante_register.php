@@ -35,6 +35,10 @@ class participante_register extends form_action_base{
                     $this->deleteUser($formData);
                     break;
                 }
+                case self::ACTION_EMAIL_USERS: {
+                    $this->emailUsers($formData);
+                    break;
+                }
 
                 default: {
                     break;
@@ -203,6 +207,39 @@ class participante_register extends form_action_base{
 
     }
 
+    private function emailUsers($formData) {
+
+        try {
+            $p_logic = new ParticipanteLogic();
+
+            $nivel_to_email = $formData['nivel'];
+
+            $filters = [];
+            if($nivel_to_email!='all') {
+                $filters['nivel'] = $nivel_to_email;
+            }
+
+            $lista = $p_logic->listParticipantes(0,-1,$filters);
+
+            foreach($lista["rows"] as $p) {
+                $subject = $formData['subject'];
+                $body = $formData['body'];
+
+                $nombre_y_apellido = $p["nombre"]." ".$p["apellido"];
+
+                foreach($p as $column=>$value) {
+                    $body = str_replace("[".strtolower($column)."]",$value,$body);
+                }
+                Utilities::sendEmail($p["email"],$nombre_y_apellido,$body,null,$subject);
+            }
+
+            $this->result = ["status"=>"ok"];
+
+
+        }catch(Exception $e) {
+            $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
+        }
+    }
     public function getParticipante() {
         return $this->participante;
     }

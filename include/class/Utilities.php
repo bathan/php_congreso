@@ -94,4 +94,38 @@ class Utilities {
 
     }
 
+    public static function sendEmail($email_to,$name_to,$body_html,$body_plain=null,$subject) {
+        $mail = new \PHPMailer();
+
+        //$mail->SMTPDebug = 3;                               // Enable verbose debug output
+
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = _SMTP_SERVER;  // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = _SMTP_USER_NAME;                 // SMTP username
+        $mail->Password = _SMTP_USER_PASS;                           // SMTP password
+        $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 25;                                    // TCP port to connect to
+
+        $mail->From = _EMAIL_FROM;
+        $mail->FromName = _EMAIL_FROM_NAME;
+        $mail->addAddress($email_to, $name_to);     // Add a recipient
+        $mail->isHTML(true);                                  // Set email format to HTML
+
+        $body_plain = utf8_encode($body_plain);
+
+        $mail->Subject = $subject;
+        $mail->Body    = $body_html;
+        if($body_plain){
+            $mail->AltBody = $body_plain;
+        }
+
+        if(!$mail->send()) {
+            throw new Exception($mail->ErrorInfo);
+        } else {
+            return true;
+        }
+
+    }
+
 }

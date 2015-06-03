@@ -222,43 +222,18 @@ class ParticipanteLogic {
         $participante = $this->obtenerParticipante($id);
         $nombre_y_apellido = $participante["nombre"]." ".$participante["apellido"];
 
-        $mail = new \PHPMailer();
-
-        //$mail->SMTPDebug = 3;                               // Enable verbose debug output
-
-        $mail->isSMTP();                                      // Set mailer to use SMTP
-        $mail->Host = _SMTP_SERVER;  // Specify main and backup SMTP servers
-        $mail->SMTPAuth = true;                               // Enable SMTP authentication
-        $mail->Username = _SMTP_USER_NAME;                 // SMTP username
-        $mail->Password = _SMTP_USER_PASS;                           // SMTP password
-        $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-        $mail->Port = 25;                                    // TCP port to connect to
-
-        $mail->From = _EMAIL_FROM;
-        $mail->FromName = _EMAIL_FROM_NAME;
-        $mail->addAddress($participante["email"], $nombre_y_apellido);     // Add a recipient
-        //$mail->addReplyTo(_EMAIL_FROM, _EMAIL_FROM_NAME);
-        //$mail->addCC(_EMAIL_FROM);
-        $mail->isHTML(true);                                  // Set email format to HTML
-
         $body_html = "[NOMBRE],<br/><br>Gracias por inscribirte al Congreso Pedag&oacute;gico UTELPa 2015. ¡Felicitaciones!<br/><br/>Pr&oacute;ximamente, cuando ya se encuentre disponible la Plataforma de trabajo, te estaremos enviando un mail con un usuario y una clave personal para que puedas ingresar a la misma.<br/><br/>Cordialmente.<br/><br/><strong>UTELPa.</strong>";
         $body_plain = "[NOMBRE]\nGracias por inscribirte al Congreso Pedagógico UTELPa 2015. ¡Felicitaciones!\nPróximamente, cuando ya se encuentre disponible la Plataforma de trabajo, te estaremos enviando un mail con un usuario y una clave personal para que puedas ingresar a la misma.\nCordialmente.\nUTELPa.";
 
         $body_html = str_replace('[NOMBRE]',$participante["nombre"],$body_html);
         $body_plain = str_replace('[NOMBRE]',$participante["nombre"],$body_plain);
 
-        $body_plain = utf8_encode($body_plain);
+        try {
+            Utilities::sendEmail($participante["email"],$nombre_y_apellido,$body_html,$body_plain,'Bienvenida/o al Congreso UTELPa 2015.');
+        }catch(Exception $e) {
 
-        $mail->Subject = 'Bienvenida/o al Congreso UTELPa 2015.';
-        $mail->Body    = $body_html;
-        $mail->AltBody = $body_plain;
-
-        if(!$mail->send()) {
-         //   echo 'Message could not be sent.';
-         //   echo 'Mailer Error: ' . $mail->ErrorInfo;
-        } else {
-         //   echo 'Message has been sent';
         }
+
 
     }
 
@@ -349,12 +324,13 @@ class ParticipanteLogic {
 
         $escuelas = [];
         $localidades = [];
-
+        $niveles = [];
         $counts["participantes"] = count($list["rows"]);
 
         foreach($list["rows"] as $p_id=>$p) {
             $escuelas[] = strtolower($p["escuela"]);
             $localidades[] = strtolower($p["localidad"]);
+            @$niveles[$p["nivel"]]++;
         }
 
         $escuelas = array_unique($escuelas);
@@ -362,10 +338,12 @@ class ParticipanteLogic {
 
         $counts["localidades"] = count($localidades);
         $counts["escuelas"] = count($escuelas);
+        $counts["niveles"] = $niveles;
 
         return $counts;
 
     }
+
 
 
 }

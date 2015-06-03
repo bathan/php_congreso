@@ -29,6 +29,7 @@ if($post_data) {
 
                 break;
             }
+            case form_action_base::ACTION_EMAIL_USERS:
             case form_action_base::ACTION_DELETE_USER:
             case form_action_base::ACTION_FORUM_ADD:
             case form_action_base::ACTION_REGISTER:

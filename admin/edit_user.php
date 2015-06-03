@@ -50,57 +50,56 @@ $participante = $p_logic->obtenerParticipante($_GET["id"]);
 						<div class="container">
 
 							<header>
-								<h2>Editar Usuario</h2>
-								<form action="" method="get"><table border="0" align="center" cellpadding="6" cellspacing="6">
+								<h2>Perfil de  Usuario</h2>
+								<table border="0" align="center" cellpadding="6" cellspacing="6">
 								  <tr>
-								    <td align="left">Nombre</td>
-								    <td align="left"><label for="textfield"></label>
-							        <input name="nombre" type="text" id="nombre" value="<?=$participante["nombre"];?>" ></td>
-							      </tr>
-								  <tr>
-								    <td align="left">Apellido</td>
-								    <td align="left"><input name="apellido" type="text" id="apellido" value="<?=$participante["apellido"];?>"></td>
-							      </tr>
-								  <tr>
-								    <td align="left">DNI</td>
-								    <td align="left"><input name="dni" type="text" id="dni" value="<?=$participante["dni"];?>"></td>
-							      </tr>
-								  <tr>
-								    <td align="left">Localidad</td>
-								    <td align="left"><input name="localidad" type="text" id="localidad" value="<?=$participante["localidad"];?>"></td>
-							      </tr>
-								  <tr>
-								    <td align="left">Email</td>
-								    <td align="left"><input name="email" type="text" id="email" value="<?=$participante["email"];?>"></td>
-							      </tr>
-								  <tr>
-								    <td align="left">Escuela</td>
-								    <td align="left"><input name="escuela" type="text" id="escuela" value="<?=$participante["escuela"];?>"></td>
-							      </tr>
-								  <tr>
-								    <td align="left">Nivel</td>
+								    <td align="right">Nombre:</td>
 								    <td align="left">
-                                        <select name="nivel" id="nivel">
-                                            <option value="Primario" <? if($participante["nivel"]=='Primario') { echo "selected"; } ?>>Primario</option>
-                                            <option value="Secundario" <? if($participante["nivel"]=='Secundario') { echo "selected"; } ?>>Secundario</option>
-                                            <option value="Estudiantes" <? if($participante["nivel"]=='Estudiantes') { echo "selected"; } ?>>Estudiantes</option>
-                                            <option value="Otros" <? if($participante["nivel"]=='Otros') { echo "selected"; } ?>>Otros</option>
-                                        </select>
+							        <?=$participante["nombre"];?></td>
+							      </tr>
+								  <tr>
+								    <td align="right">Apellido:</td>
+								    <td align="left"><?=$participante["apellido"];?></td>
+							      </tr>
+								  <tr>
+								    <td align="right">DNI:</td>
+								    <td align="left"><?=$participante["dni"];?></td>
+							      </tr>
+								  <tr>
+								    <td align="right">Localidad:</td>
+								    <td align="left"><?=$participante["localidad"];?></td>
+							      </tr>
+								  <tr>
+								    <td align="right">Email:</td>
+								    <td align="left"><?=$participante["email"];?></td>
+							      </tr>
+								  <tr>
+								    <td align="right">Escuela:</td>
+								    <td align="left"><?=$participante["escuela"];?></td>
+							      </tr>
+								  <tr>
+								    <td align="right">Nivel:</td>
+								    <td align="left">
+                                        <?=$participante["nivel"];?>
                                     </td>
 							      </tr>
 								  <tr>
-								    <td align="left">Foros</td>
+								    <td align="right">Foros:</td>
 								    <td align="left">(foros en los que participo)</td>
 							      </tr>
 								  <tr>
-								    <td align="left">Trabajo</td>
+								    <td align="right">Trabajo:</td>
 								    <td align="left"><a href="#">trabajo.pdf</a> (# votos)</td>
 							      </tr>
 								  <tr>
 								    <td align="left">&nbsp;</td>
-								    <td align="left"><a href="#" class="button scrolly" id="btn_guardar">Guardar</a></td>
+								    <td align="left">&nbsp;</td>
 							      </tr>
-							  </table></form>
+								  <tr>
+								    <td align="left">&nbsp;</td>
+								    <td align="left"><a href="inscriptos.php" class="button scrolly" id="btn_guardar">Regresar</a></td>
+							      </tr>
+							  </table>
                             </header>
 
 							
@@ -122,49 +121,5 @@ $participante = $p_logic->obtenerParticipante($_GET["id"]);
 
 	</body>
 
-    <script language="JavaScript">
-
-        $(document).ready(function() {
-
-            $('#btn_guardar').click(function (e) {
-
-                 //-- Obtener los datos del form
-                var nombre = $('#nombre').val();
-                var apellido = $('#apellido').val();
-                var dni = $('#dni').val();
-                var localidad = $('#localidad').val();
-                var email = $('#email').val();
-                var nivel = $('#nivel').val();
-                var escuela = $('#escuela').val();
-                var action ='update_info';
-                var user_token = '<?=$participante["user_token"];?>';
-
-                 var dataString = JSON.stringify({
-                        nombre: nombre,
-                        apellido: apellido,
-                        dni: dni,
-                        localidad: localidad,
-                        email: email,
-                        nivel:  nivel,
-                        escuela:  escuela,
-                        action: action,
-                        user_token: user_token
-                    });
-
-                var posting = $.post( "/form_actions/participantes/index.php", dataString );
-
-                // Put the results in a div
-                posting.done(function( data ) {
-                    var response = jQuery.parseJSON(data);
-                    if(response.status=='error') {
-                        alert('Se ha producido un error al actualizar los datos del participante');
-                    }
-
-                    if(response.status=='ok') {
-                        alert('Participante actualizado con éxito');
-                    }
-                });
-            });
-        });
-    </script>
+    
 </html>

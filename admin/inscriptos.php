@@ -64,7 +64,7 @@ include_once __DIR__ . '/seeker.php';
                                       <?php
                                         if($total>0) {
                                             ?>
-                                            Mostrando <?= $start; ?>-<?= $end; ?> de <?= $total; ?> inscriptos
+                                            Mostrando <?= $start; ?>-<?= $end; ?> de <?= $total; ?> entradas
 
                                         <?php
                                         }
@@ -92,7 +92,7 @@ include_once __DIR__ . '/seeker.php';
 							<div class="row">
 							  <table width="100%" border="0" cellspacing="0" cellpadding="0" id="participantes">
 							    <tr class="firstRow">
-							      <td width="80">EDITAR</td>
+							      <td width="80">PERFIL</td>
 							      <td width="60"><a href="javascript:sortTable('id');">ID <span class="icon fa-sort"></span></a></td>
 							      <td><a href="javascript:sortTable('nombre');">Nombre <span class="icon fa-sort"></span></a></td>
 							      <td><a href="javascript:sortTable('apellido');">Apellido <span class="icon fa-sort"></span></a></td>
@@ -106,11 +106,10 @@ include_once __DIR__ . '/seeker.php';
                                   <?php
                                   if($resultado && $resultado["rows"]>0) {
                                     foreach($resultado["rows"] as $p) {
-
 ?>
 
                                         <tr>
-                                            <td align="center" valign="middle" class="centrado"><a href="edit_user.php?id=<?=$p["id"];?>" rel="leanModal"><span class="icon fa-edit"></span></a></td>
+                                            <td align="center" valign="middle" class="centrado"><a href="edit_user.php?id=<?=$p["id"];?>" rel="leanModal"><span class="icon fa-eye"></span></a></td>
                                             <td class="izquierda"><?=$p["id"];?></td>
                                             <td class="izquierda"><?=$p["nombre"];?></td>
                                             <td class="izquierda"><?=$p["apellido"];?></td>

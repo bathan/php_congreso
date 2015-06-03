@@ -1,3 +1,14 @@
+<?php
+include_once __DIR__ . '/../include/config.php';
+require_once _PARTICIPANTE_LOGIC_PATH;
+require_once _UTILITIES_PATH;
+
+$pl = new ParticipanteLogic();
+$counts = $pl->getPartipanteCounts();
+
+
+?>
+
 <!DOCTYPE HTML>
 
 <html>
@@ -46,24 +57,26 @@
 							mauris non cum elit tempus ullamcorper dolor. Libero rutrum ut lacinia
 							donec curae mus.</p>
 
-							<form action="#" method="post" enctype="multipart/form-data">
+							<form id="theform" >
 								<div class="row">
-									<div class="6u 12u$(mobile)"><input type="text" name="name" placeholder="Asunto" /></div>
-									<div class="6u 12u$(mobile)"><select name="select" id="select">
-									  <option selected>Seleccione Nivel</option>
-									  <option>Todos los niveles</option>
-									  <option>Nivel Primario</option>
-									  <option>Nivel Secundario</option>
-									  <option>Estudiantes</option><option>Otros</option>
-								      </select>
+									<div class="6u 12u$(mobile)"><input type="text" name="subject" id="subject" placeholder="Asunto" /></div>
+									<div class="6u 12u$(mobile)">
+                                            <select name="nivel" id="nivel">
+									            <option value="0" selected>Seleccione Nivel</option>
+                                                <option value="all">Todos los niveles</option>
+									            <option value="Primario">Nivel Primario</option>
+									            <option value="Secundario">Nivel Secundario</option>
+									            <option value="Estudiante">Estudiantes</option>
+                                                <option value="Otros">Otros</option>
+								            </select>
 									  
 									  
 									</div>
 									<div class="12u$">
-										<textarea name="message" placeholder="Mensaje"></textarea>
+										<textarea name="body" id="body" placeholder="Mensaje" ></textarea>
 									</div>
 									<div class="12u$">
-										<input type="submit" value="Enviar Mensaje" />
+										<input type="button" id="enviar" value="Enviar Mensaje" />
 									</div>
 								</div>
 							</form>
@@ -83,7 +96,98 @@
 
 			</div>
 
-		
+        <script>
+        $(document).ready(function() {
+
+            $('#theform').keypress(function(event){
+
+                if (event.keyCode == 10 || event.keyCode == 13) {
+                    event.preventDefault();
+                }
+
+            });
+
+            $('#enviar').click(function (e) {
+                doTheSending();
+            });
+
+            var am_i_sending = false;
+
+            function doTheSending() {
+
+                if(am_i_sending) {
+                    return;
+                }
+
+                var theCounts = <?=json_encode($counts);?>;
+                var nivel = $('#nivel').val();
+                var subject = $('#subject').val();
+                var body = $('#body').val();
+
+                //-- Primeras Validaciones
+                if(nivel==0) {
+                    alert('Debe seleccionar un Nivel');
+                    return;
+                }
+
+                if(subject=='') {
+                    alert('Debe ingresar el asunto del email');
+                    return;
+                }
+
+                if(body=='') {
+                    alert('Debe ingresar el mensaje del email');
+                    return;
+                }
+
+                //-- So far, so good
+                var confirmed = false;
+
+                if(nivel=='all') {
+                    var totalRecipients = theCounts.participantes;
+                }else{
+                    var totalRecipients = theCounts.niveles[nivel];
+                }
+
+                if (typeof(totalRecipients) == 'undefined' || totalRecipients==0) {
+                    alert('No hay inscriptos en nivel '+nivel);
+                    return;
+                }
+
+                if(confirm('Está por enviar un email a '+totalRecipients+' inscriptos. ¿Está seguro que desea continuar?')) {
+
+                    var dataString = JSON.stringify({action: 'email_users',nivel: nivel,subject:subject,body:body});
+
+                    var posting = $.post( "/form_actions/participantes/index.php", dataString );
+                    var current_text = $('#enviar').val();
+
+                    $('#enviar').prop('value','Enviando mensajes');
+                    $('#enviar').attr('disabled',true);
+                    am_i_sending = true;
+
+                    // Put the results in a div
+                    posting.done(function( data ) {
+                        var response = jQuery.parseJSON(data);
+                        if(response.status=='error') {
+                            alert('Se ha producido un error al enviar los emails');
+                        }
+
+                        if(response.status=='ok') {
+                            alert('Emails enviados con éxito');
+                        }
+
+                        $('#enviar').prop('value',current_text);
+                        $('#enviar').attr('disabled',false);
+                        am_i_sending = false;
+
+                    });
+
+
+                }
+
+            }
+        });
+        </script>
             
         
             

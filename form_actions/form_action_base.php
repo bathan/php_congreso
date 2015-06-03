@@ -10,6 +10,7 @@ class form_action_base {
     const ACTION_UPDATE_INFO = 'update_info';
     const ACTION_FORUM_ADD = 'forum_add';
     const ACTION_DELETE_USER = 'delete_user';
+    const ACTION_EMAIL_USERS = 'email_users';
 
     protected $action;
     private $formData = [];
