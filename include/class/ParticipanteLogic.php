@@ -93,6 +93,10 @@ class ParticipanteLogic {
             throw new \Exception("Error validando datos del participante. El email ya se encuentra registrado.");
         }
 
+        if(strtolower($datos["nivel"])==strtolower('Estudiantes')) {
+            throw new \Exception("No es posible inscribirse. Se ha completado el cupo para Estudiantes.");
+        }
+
         //-- Acomodamos las mayusculas/minusculas de algunos campos
         /*
         $campos = ['localidad','nombre','apellido'];

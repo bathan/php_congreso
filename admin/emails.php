@@ -100,9 +100,12 @@ $counts = $pl->getPartipanteCounts();
         $(document).ready(function() {
 
             $('#theform').keypress(function(event){
+                var target_id = event.target.id;
 
                 if (event.keyCode == 10 || event.keyCode == 13) {
-                    event.preventDefault();
+                    if(target_id != 'body') {
+                        event.preventDefault();
+                    }
                 }
 
             });

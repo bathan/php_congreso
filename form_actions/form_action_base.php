@@ -11,6 +11,7 @@ class form_action_base {
     const ACTION_FORUM_ADD = 'forum_add';
     const ACTION_DELETE_USER = 'delete_user';
     const ACTION_EMAIL_USERS = 'email_users';
+    const ACTION_UPLOAD_TRABAJO = 'upload_trabajo';
 
     protected $action;
     private $formData = [];

@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../form_action_base.php';
 require_once _PARTICIPANTE_LOGIC_PATH;
+require_once _TRABAJO_LOGIC_PATH;
 require_once _UTILITIES_PATH;
 
 /**
@@ -12,7 +13,7 @@ class participante_register extends form_action_base{
 
     private $participante;
 
-    public function __construct(Array $formData)
+    public function __construct(Array $formData,$files=null)
     {
 
         try {
@@ -37,6 +38,10 @@ class participante_register extends form_action_base{
                 }
                 case self::ACTION_EMAIL_USERS: {
                     $this->emailUsers($formData);
+                    break;
+                }
+                case self::ACTION_UPLOAD_TRABAJO: {
+                    $this->uploadTrabajo($formData,$files);
                     break;
                 }
 
@@ -221,6 +226,8 @@ class participante_register extends form_action_base{
 
             $lista = $p_logic->listParticipantes(0,-1,$filters);
 
+            $emails_enviados = [];
+
             foreach($lista["rows"] as $p) {
                 $subject = $formData['subject'];
                 $body = $formData['body'];
@@ -230,15 +237,35 @@ class participante_register extends form_action_base{
                 foreach($p as $column=>$value) {
                     $body = str_replace("[".strtolower($column)."]",$value,$body);
                 }
-                Utilities::sendEmail($p["email"],$nombre_y_apellido,$body,null,$subject);
+                $html_body = str_replace("\n\n","<br><br>",$body);
+                $emails_enviados[] = ["recipient"=>$p["email"],"body_plain"=>$body,"body_html"=>$html_body];
+
+                //Utilities::sendEmail($p["email"],$nombre_y_apellido,$html_body,$body,$subject);
             }
 
-            $this->result = ["status"=>"ok"];
+            $this->result = ["status"=>"ok","emails_enviados"=>$emails_enviados];
 
 
         }catch(Exception $e) {
             $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
         }
+    }
+
+    private function uploadTrabajo($formData,$filesData) {
+
+        try {
+
+            $tl = new TrabajoLogic();
+            $new_trabajo_id = $tl->agregarTrabajo($formData,$filesData);
+
+            $this->result = ["status"=>"ok","trabajo_id"=>$new_trabajo_id];
+
+        }catch(Exception $e) {
+            $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
+        }
+
+
+
     }
     public function getParticipante() {
         return $this->participante;

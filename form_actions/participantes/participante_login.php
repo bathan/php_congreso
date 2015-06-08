@@ -51,6 +51,11 @@ class participante_login extends form_action_base{
             $this->result = array_merge(["status"=>"ok"],$p);
             $this->participante = $p;
 
+            session_start();
+            $_SESSION['USER_TOKEN'] = $p["user_token"];
+            $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+
+
         }catch(Exception $e) {
             $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
         }

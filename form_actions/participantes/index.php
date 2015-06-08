@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 include_once __DIR__ . '/../form_action_base.php';
 include_once __DIR__ . '/participante_login.php';
 include_once __DIR__ . '/participante_register.php';
@@ -29,6 +27,10 @@ if($post_data) {
 
                 break;
             }
+            case form_action_base::ACTION_UPLOAD_TRABAJO: {
+                $participante_action = new participante_register($_POST,$_FILES);
+                break;
+            }
             case form_action_base::ACTION_EMAIL_USERS:
             case form_action_base::ACTION_DELETE_USER:
             case form_action_base::ACTION_FORUM_ADD:
@@ -42,6 +44,7 @@ if($post_data) {
                 $result = ["status"=>"ok"];
                 break;
             }
+
             default: {
                 break;
             }

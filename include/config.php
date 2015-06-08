@@ -30,8 +30,14 @@ foreach ($defaultValues as $name => $val) {
 //class paths
 define("_BASE_DATA_ACCESS_PATH", _APP_PATH . "/include/data/BaseDataAccess.php");
 define("_CONGRESO_DATA_ACCESS_PATH", _APP_PATH . "/include/data/CongresoDataAccess.php");
+//-- Entities
 define("_PARTICIPANTE_ENTITY_PATH", _APP_PATH . "/include/data/entities/ParticipanteEntity.php");
+define("_TRABAJO_ENTITY_PATH", _APP_PATH . "/include/data/entities/TrabajoEntity.php");
+define("_VOTO_ENTITY_PATH", _APP_PATH . "/include/data/entities/VotoEntity.php");
+
+//-- Logics
 define("_PARTICIPANTE_LOGIC_PATH", _APP_PATH . "/include/class/ParticipanteLogic.php");
+define("_TRABAJO_LOGIC_PATH", _APP_PATH . "/include/class/TrabajoLogic.php");
 define("_UTILITIES_PATH", _APP_PATH . "/include/class/Utilities.php");
 
 //Encoding Secret

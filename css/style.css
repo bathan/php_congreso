@@ -24,6 +24,9 @@ html {
 	background-position: right bottom;
 	background-color: #434A50;
 }
+#eje1{
+
+}
 #inscripcion a:hover{
 	color: #FFF;
 }
@@ -369,6 +372,10 @@ hr {
 	background-position: center bottom;
 	background-color: #a91a1f;
 background-size: cover;
+}
+.intro2{
+	background-image: url(../img/bg2.png);
+	background-size: cover;
 }
 
 #intro.intro {
@@ -896,4 +903,82 @@ h4 a:active{
 #intro.intro {
 	padding:15% 0 0 0 !important;
 }
+}
+.left{
+	text-align: left;
+}
+#trabajos td{
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #ccc;
+}
+#trabajos td, #trabajos2 td{
+	margin: 4px;
+	padding-top: 12px;
+	padding-right: 4px;
+	padding-bottom: 10px;
+	padding-left: 4px;
+}
+#trabajos .votar a{
+	border-radius:5px;
+	font-weight: 700;
+	color: #6ec4e6;
+	text-decoration: none;
+	background-color: #FFF;
+	padding-top: 8px;
+	padding-right: 10px;
+	padding-bottom: 8px;
+	padding-left: 10px;
+}
+#trabajos .votar a:hover{
+	background-color: #6ec4e6;
+	color: #FFF;
+}
+#trabajos .votar .votado{
+	background-color: #333;
+	color: #FFF;
+}
+#trabajos .votar{
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #fff;
+}
+#trabajos a{
+	color: #333;
+	text-decoration: none;
+}
+#trabajos a:hover{
+	color: #6EC4E6;
+	text-decoration: none;
+}
+#login {
+	color: #FFF;
+	text-decoration: none;
+	font-size: 16px;
+}
+#login TD{
+	padding: 6px;
+}
+#login input{
+	padding: 6px;
+	color: #333;
+	border-radius: 4px;
+}
+#login h1{
+	color: #fff;
+	font-size: 30px;
+	line-height: 40px;
+		text-transform: none;
+}
+#login a{
+	color: #fff;
+	filter: Alpha(Opacity=55);
+	opacity: .55;
+	font-size: 14px;
+	
+}
+#login a:hover{
+	filter: Alpha(Opacity=99);
+	opacity: .99;
+	
 }

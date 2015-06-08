@@ -1,9 +1,22 @@
 $(document).ready(function() {
 
     $('#confirmacion').hide();
+    $('#error_text').hide();
 
     var button_running = false;
 
+
+    $("#nivel").change(function(){
+           $(this).find("option:selected").each(function(){
+               if($(this).attr("value").toLowerCase()=="estudiantes"){
+                   $('#error_text').show();
+                   $('#btnRegister').attr("disabled", true);
+               }else{
+                    $('#btnRegister').attr("disabled", false);
+                    $('#error_text').hide();
+               }
+           });
+       }).change();
 
     $('#btnRegister').click(function (e) {
 
@@ -42,6 +55,12 @@ $(document).ready(function() {
             button_running = false;
             $('#btnRegister').attr("disabled", false);
             alert('Debe completar los siguientes campos: ' + errores.join(', '));
+            return;
+        }
+
+        if(nivel.toLowerCase()=='estudiantes') {
+            alert('No es posible inscribirse. Se ha completado el cupo para Estudiantes.');
+            $('#btnRegister').attr("disabled", false);
             return;
         }
 
