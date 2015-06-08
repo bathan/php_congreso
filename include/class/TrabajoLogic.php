@@ -66,7 +66,7 @@ class TrabajoLogic {
                                 "titulo_trabajo"=>$titulo_trabajo
                                 ]);
 
-                    return $t->toDatabase();;
+                    return $t->toDatabase();
 
                 } else {
                     throw new Exception("Lo sentimos, ha ocurrido un error al subir su trabajo.");
