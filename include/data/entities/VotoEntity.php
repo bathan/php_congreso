@@ -57,7 +57,7 @@ class VotoEntity {
 
         $db = new CongresoDataAccess();
 
-        $q = "INSERT INTO trabajos (id_participante,id_trabajo,created_date) values ";
+        $q = "INSERT INTO votos (id_participante,id_trabajo,created_date) values ";
         $q .= "(";
         $q .= "'".$db->escape($this->id_participante)."',";
         $q .= "'".$db->escape($this->id_trabajo)."',";
@@ -74,6 +74,30 @@ class VotoEntity {
             $db = new CongresoDataAccess();
 
             $q = "select * from votos where id_particpante=".$id_participante;
+
+            $db_resource = $db->executeAndFetch($q);
+            $rows = [];
+            if(count($db_resource)>0) {
+                foreach($db_resource as $res) {
+                    $p = new VotoEntity();
+                    Utilities::populateClassFromArray($p,$res);
+                    $rows[$res["id"]] = $p->toArray();
+                }
+            }
+
+            return $rows;
+
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public static function listVotosByTrabajo($id_trabajo) {
+        try {
+
+            $db = new CongresoDataAccess();
+
+            $q = "select * from votos where id_trabajo=".$id_trabajo;
 
             $db_resource = $db->executeAndFetch($q);
             $rows = [];
@@ -109,5 +133,7 @@ class VotoEntity {
             throw $e;
         }
     }
+
+
 
 }

@@ -34,6 +34,7 @@ class ParticipanteEntity {
             throw new \Exception("No hay información para popular al Participante");
         }
     }
+
     public function fromDatabase($id) {
         try {
             $db = new CongresoDataAccess();
@@ -48,7 +49,22 @@ class ParticipanteEntity {
         }catch(\Exception $e) {
             throw $e;
         }
+    }
 
+    public function fromDatabaseByEmail($email) {
+        try {
+            $db = new CongresoDataAccess();
+            $q = "select * from participantes where LOWER(email)='".$db->escape(strtolower($email))."'";
+            $db_resource = $db->executeAndFetchSingle($q);
+            if($db_resource) {
+                Utilities::populateClassFromArray($this,$db_resource);
+            }else{
+                throw new \Exception("No se encuentra al participante con email ".$email,1000);
+            }
+
+        }catch(\Exception $e) {
+            throw $e;
+        }
     }
 
     public function toArray() {

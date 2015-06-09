@@ -30,8 +30,9 @@
 </style>
 <div class="boxed-grey">
 <h2>Enviar tu trabajo</h2>
+                <div class="row" id="formulario_inscripcion_div">
                 <form enctype="multipart/form-data" id="contact-form" method="POST" action="form_actions/participantes/">
-                <div class="row">
+
                   <div class="col-md-12" id="formulario_inscripcion">
                         <div class="form-group">
                             <label for="nombre">
@@ -44,20 +45,24 @@
                           <input type="file" name="theFile" id="theFile" />
                         </div>
                         <div class="form-group"></div>
-                    <!--Confirmacion de envio-->
-                    <div class="col-md-12" id="confirmacion">
-                        Tu trabajo se envio exitosamente. Recibira un email de confirmación. Por favor guarde ese email para futura referencia. <br>
-                        ¡Gracias!
-                        </div>
-                      <!--Fin de confirmacion-->
+
                         
                     </div>
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-skin pull-center" id="btnContactUs">
+                        <button type="button" class="btn btn-skin pull-center" id="btnUpload">
                       Enviar Trabajo</button>
                   </div>
-                </div>
+
+
+                    <!--Fin de confirmacion-->
                     <input type="hidden" name="action" id="action" value="upload_trabajo" />
                     <input type="hidden" name="id_participante" id="id_participante" value="<?=$session_id_participante;?>" />
                 </form>
+                </div>
+    <!--Confirmacion de envio-->
+    <div id="confirmacion">
+        Tu trabajo se envio exitosamente. Recibira un email de confirmación. Por favor guarde ese email para futura referencia. <br>
+        ¡Gracias!
+    </div>
             </div>
+

@@ -11,6 +11,7 @@ class TrabajoEntity {
     public $nombre_fs;
     public $titulo_trabajo;
     public $votos;
+    public $comentarios;
 
     public function __construct() {
 
@@ -45,10 +46,11 @@ class TrabajoEntity {
     }
 
     public function toJSON() {
+
         if($this->id > 0) {
             $json_string = json_encode(get_object_vars($this),JSON_PRETTY_PRINT);
         }else{
-            throw new \Exception("No hay participante seleccionado");
+            throw new \Exception("No hay trabajo seleccionado");
         }
         return $json_string;
     }
@@ -80,6 +82,7 @@ class TrabajoEntity {
         $q .= "nombre_fs='".$db->escape($this->nombre_fs)."',";
         $q .= "titulo_trabajo='".$db->escape($this->titulo_trabajo)."',";
         $q .= "votos='".$db->escape($this->votos)."',";
+        $q .= "comentarios='".$db->escape($this->comentarios)."',";
         $q .= "last_update=CURRENT_TIMESTAMP ";
         $q .= "where id=".$this->id;
 
@@ -168,7 +171,7 @@ class TrabajoEntity {
                 if(count($db_resource)>0) {
                     $rows = [];
                     foreach($db_resource as $res) {
-                        $p = new ParticipanteEntity();
+                        $p = new TrabajoEntity();
                         Utilities::populateClassFromArray($p,$res);
                         $rows[$res["id"]] = $p->toArray();
                     }

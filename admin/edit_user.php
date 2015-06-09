@@ -2,11 +2,22 @@
 
 include_once __DIR__ . '/../include/config.php';
 require_once _PARTICIPANTE_LOGIC_PATH;
+require_once _TRABAJO_LOGIC_PATH;
 require_once _UTILITIES_PATH;
 
 $p_logic = new ParticipanteLogic();
 
 $participante = $p_logic->obtenerParticipante($_GET["id"]);
+
+$t_logic = new TrabajoLogic();
+
+try {
+    $trabajo = $t_logic->obtenerTrabajoDeParticipante($participante["id"]);
+    $comentarios = $trabajo["comentarios"];
+}catch(Exception $e) {
+    $trabajo = null;
+}
+
 
 ?>
 
@@ -87,10 +98,21 @@ $participante = $p_logic->obtenerParticipante($_GET["id"]);
 								    <td align="right">Foros:</td>
 								    <td align="left">(foros en los que participo)</td>
 							      </tr>
+                                    <? if($trabajo) { ?>
 								  <tr>
 								    <td align="right">Trabajo:</td>
-								    <td align="left"><a href="#">trabajo.pdf</a> (# votos)</td>
+								    <td align="left"><a href="/download.php?id_trabajo=<?=$trabajo["id"];?>&fa=1"><?=$trabajo["titulo_trabajo"]?></a> (<?=$trabajo["votos"];?> votos)</td>
 							      </tr>
+                                        <tr>
+                                            <td align="right" valign="center">Comentarios</td>
+                                            <td align="left">
+                                                <div class="12u$">
+                                                    <textarea name="commentarios" id="commentarios" placeholder="Mensaje" cols="40" rows="20" ><?=$comentarios?></textarea>
+                                                </div>
+                                                <input type="button" name="UpdateComment" id="UpdateComment" value="Actualizar Comentario" />
+                                            </td>
+                                        </tr>
+                                    <? } ?>
 								  <tr>
 								    <td align="left">&nbsp;</td>
 								    <td align="left">&nbsp;</td>
@@ -118,6 +140,57 @@ $participante = $p_logic->obtenerParticipante($_GET["id"]);
 					</ul>
 
 			</div>
+
+    <script>
+        $(document).ready(function() {
+
+            <?php if($trabajo) { ?>
+
+
+            $('#UpdateComment').click(function (e) {
+
+                $('#UpdateComment').attr("disabled", true);
+
+                var comments = $('#commentarios').val();
+                var id_trabajo = '<?=$trabajo["id"];?>';
+
+                if(commentarios=='') {
+                    $('#UpdateComment').attr("disabled", false);
+                        alert('Debe completar el comentario antes de guardarlo');
+                        return;
+                }
+
+                //-- Si llegamos a este momento es que todas las validaciones han sido correctas.
+                var dataString = JSON.stringify({
+                                id_trabajo: id_trabajo,
+                                comments: comments,
+                                action: 'add_trabajo_comment'
+                            });
+
+                var posting = $.post( "/form_actions/participantes/index.php", dataString );
+
+                // Put the results in a div
+                posting.done(function( data ) {
+                    var response = jQuery.parseJSON(data);
+
+                    if(response.status=='error') {
+                        alert('Se ha producido un error al guardar el comentario. '+ response.data);
+                        $('#UpdateComment').attr("disabled", false);
+                    }
+
+                    if(response.status=='ok') {
+                        alert('El comentario ha sido almacenado con éxito');
+                        location.reload();
+                    }
+                });
+
+                 $('#UpdateComment').attr("disabled", false);
+             });
+
+             <?php } ?>
+        });
+
+    </script>
 
 	</body>
 

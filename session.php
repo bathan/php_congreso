@@ -2,8 +2,12 @@
 include_once __DIR__ . '/include/config.php';
 session_start();
 require_once _PARTICIPANTE_LOGIC_PATH;
+require_once _TRABAJO_LOGIC_PATH;
 require_once _UTILITIES_PATH;
 
+if(isset($_GET["logout"]) && $_GET["logout"]==1) {
+    destroyAndRedirect("014");
+}
 
 if (session_status() == PHP_SESSION_NONE) {
     //-- there is no session. Lets leave everything as it is
@@ -27,6 +31,11 @@ if (session_status() == PHP_SESSION_NONE) {
     }
 
     $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+
+
+    $participante_ya_subio_trabajos = $ParticipanteLogicObject->tieneTrabajoSubido($session_id_participante);
+    $participante_data = $ParticipanteLogicObject->obtenerParticipante($session_id_participante);
+
 }
 
 function destroyAndRedirect($c) {

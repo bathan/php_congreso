@@ -1,5 +1,6 @@
 <?php
 require_once _PARTICIPANTE_ENTITY_PATH;
+require_once _TRABAJO_ENTITY_PATH;
 
 class ParticipanteLogic {
 
@@ -238,6 +239,24 @@ class ParticipanteLogic {
 
         }
 
+    }
+
+    public function sendForgotPasswordEmail($participante) {
+
+        $nombre_y_apellido = $participante["nombre"]." ".$participante["apellido"];
+
+        $body_html = "Hola [NOMBRE],<br/><br>Tu contraseña de acceso al sitio es <strong>".$participante["password"]."</strong><br/><br/>Cordialmente.<br/><br/><strong>UTELPa.</strong>";
+        $body_plain  = "Hola [NOMBRE],\n\nTu contraseña de acceso al sitio es '".$participante["password"]."'\n\nCordialmente.\n\nUTELPa.";
+
+        $body_html = str_replace('[NOMBRE]',$participante["nombre"],$body_html);
+        $body_plain = str_replace('[NOMBRE]',$participante["nombre"],$body_plain);
+
+        try {
+            $subject = '=?UTF-8?Q?' . quoted_printable_encode('Recupero de contraseña UTELPa.') . '?=';
+            Utilities::sendEmail($participante["email"],$nombre_y_apellido,$body_html,$body_plain,$subject);
+        }catch(Exception $e) {
+            throw $e;
+        }
 
     }
 
@@ -247,6 +266,15 @@ class ParticipanteLogic {
     public function obtenerParticipante($id) {
         $p = new ParticipanteEntity();
         $p->fromDatabase($id);
+        return $p->toArray();
+    }
+
+    /*
+ * Obtiene un Array con los datos de un participante
+ */
+    public function obtenerParticipantePorEmail($email) {
+        $p = new ParticipanteEntity();
+        $p->fromDatabaseByEmail($email);
         return $p->toArray();
     }
 
@@ -346,6 +374,11 @@ class ParticipanteLogic {
 
         return $counts;
 
+    }
+
+    public function tieneTrabajoSubido($id_participante) {
+        $trabajo_entity = TrabajoEntity::fromDatabaseByParticipante($id_participante);
+        return (!is_null($trabajo_entity));
     }
 
 

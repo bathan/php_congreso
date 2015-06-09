@@ -58,6 +58,9 @@ include_once __DIR__ . '/session.php';
           </ul>
           
         </li>
+          <li>
+              <a href="session.php?logout=1">LogOut</a>
+          </li>
       </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -277,26 +280,33 @@ Santa Rosa</h5><p class="subtitle">Circulo de Suboficiales</p>
                       <p dir="ltr"><strong><a href="files/LA_COCINA_DE_LA_ESCRITURA.pdf" target="_blank">Compartimos la lectura del Texto: “La Cocina de la Escritura”</a></strong> (descargar PDF)</p>
                     </div>
                     <hr>
-                  
-                  <h2>Trabajos</h2>
-                  <table width="100%" border="0" cellspacing="0" cellpadding="0" id="trabajos2">
-  <tr>
-    <td width="80%" align="left"><strong>Título del Trabajo</strong></td>
-    </tr>
-</table>
-                  <script type="text/javascript">
-//specify path to your external page:
-var iframesrc="trabajos.php"
 
-//You may change most attributes of iframe tag below, such as width and height:
-document.write('<iframe id="datamain" src="'+iframesrc+'" width="100%" height="255px" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes"></iframe>')
+                      <h2>Trabajos</h2>
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0" id="trabajos2">
+                          <tr>
+                              <td width="80%" align="left"><strong>Título del Trabajo</strong></td>
+                          </tr>
+                      </table>
+                      <script type="text/javascript">
+                    //specify path to your external page:
+                    var iframesrc="trabajos.php?participante_id=<?=$session_id_participante?>";
 
-          </script><br><br>
-<div class="" >
+                    //You may change most attributes of iframe tag below, such as width and height:
+                    document.write('<iframe id="datamain" src="'+iframesrc+'" width="100%" height="255px" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="yes"></iframe>')
 
-        <?php
-        include_once __DIR__ . '/form_trabajos.php';
+
+                      </script>
+                      <br><br>
+
+                      <div class="">
+
+                          <?php
+                          if(!$participante_ya_subio_trabajos) {
+                          include_once __DIR__ . '/form_trabajos.php';
+                          }
+                        //-- End of if
         ?>
+
         </div>
            </div>
                 </div>
@@ -438,6 +448,62 @@ document.write('<iframe id="datamain" src="'+iframesrc+'" width="100%" height="2
     <script src="js/custom.js"></script>
     <script src="js/formulario_inscripcion.js"></script>
 
+    <script>
+
+$(document).ready(function() {
+    <? if(!$participante_ya_subio_trabajos) { ?>
+
+    $('#btnUpload').on('click', function() {
+        $('#btnUpload').attr("disabled", true);
+
+    var file_data = $('#theFile').prop('files')[0];
+    var titulo_trabajo = $('#titulo_trabajo').val();
+    var action = $('#action').val();
+    var id_participante = $('#id_participante').val();
+
+    var form_data = new FormData();
+
+    form_data.append('theFile', file_data);
+    form_data.append('titulo_trabajo', titulo_trabajo);
+    form_data.append('action', action);
+    form_data.append('id_participante', id_participante);
+
+    $.ajax({
+                url: '/form_actions/participantes/index.php', // point to server-side PHP script
+                dataType: 'text',  // what to expect back from the PHP script, if anything
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,
+                type: 'post',
+                success: function(data){
+                    var response = jQuery.parseJSON(data);
+
+                     if(response.status=='error') {
+                            alert(response.data);
+                            $('#btnUpload').attr("disabled", false);
+                        }
+
+                        if(response.status=='ok') {
+                            //-- Ocultar el form de Registro y mostrar el div de gracias
+                            $('#formulario_inscripcion_div').hide();
+                            $('#confirmacion').show();
+                            document.getElementById('datamain').contentDocument.location.reload(true);
+                        }
+                }
+     });
+
+     $('#btnUpload').attr("disabled", false);
+    });
+
+
+    <? } ?>
+
+
+});
+
+
+</script>
 </body>
 
 </html>

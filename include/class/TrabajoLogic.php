@@ -53,7 +53,7 @@ class TrabajoLogic {
             if($uploaded_file["size"] > 0) {
                 $file = $uploaded_file["tmp_name"];
                 $original_file_name = $uploaded_file["name"];
-                $fs_name = date("Ymd_")."_trabajo_".$id_participante.".".$file_extension;
+                $fs_name = date("YmdHis")."_trabajo_".$id_participante.".".$file_extension;
                 $target_file = _APP_PATH."/uploads/".$fs_name;
 
                 if (move_uploaded_file($file, $target_file)) {
@@ -97,13 +97,77 @@ class TrabajoLogic {
             $new_voto->id_trabajo = $id_trabajo;
             $new_voto->toDatabase();
 
+            //-- Recalcular los votos de este trabajo
+            $votos = VotoEntity::listVotosByTrabajo($id_trabajo);
+
+            $t = new TrabajoEntity();
+            $t->fromDatabase($id_trabajo);
+            $t->votos = count($votos);
+            $t->update();
+
+
 
         }catch(\Exception $e) {
             throw $e;
         }
     }
 
+    public function comentarTrabajo($id_trabajo,$comentarios) {
+        try {
 
+            $t = new TrabajoEntity();
+            $t->fromDatabase($id_trabajo);
+            $t->comentarios = $comentarios;
+            $t->update();
+
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function listarTrabajosParaParticipante($participante) {
+
+        $listado = TrabajoEntity::listTrabajos(0,-1);
+
+        //-- Hay que devolver solamente los trabajos de participantes del mismo nivel
+        $trabajos = [];
+
+        foreach($listado["rows"] as $trabajo ) {
+
+            $id_participante = $trabajo["id_participante"];
+            $p = new ParticipanteEntity();
+            $p->fromDatabase($id_participante);
+
+            if(strtolower($p->nivel)==strtolower($participante["nivel"])) {
+                //-- Revisamos si el trabajo ya fué votado por este ñato
+                $voto = VotoEntity::getVotoByParticipanteAndTrabajo($participante["id"],$trabajo["id"]);
+                $trabajo["votado"] = !is_null($voto);
+                $trabajos[$trabajo["id"]] = $trabajo;
+
+            }
+        }
+
+        return $trabajos;
+    }
+
+    public function obtenerTrabajo($id) {
+        try {
+            $te = new TrabajoEntity();
+            $te->fromDatabase($id);
+            return $te->toArray();
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function obtenerTrabajoDeParticipante($id_participante) {
+        try {
+            return TrabajoEntity::fromDatabaseByParticipante($id_participante);
+
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
 
 
 }

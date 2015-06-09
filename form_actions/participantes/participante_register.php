@@ -44,6 +44,14 @@ class participante_register extends form_action_base{
                     $this->uploadTrabajo($formData,$files);
                     break;
                 }
+                case self::ACTION_VOTE: {
+                    $this->voteTrabajo($formData);
+                    break;
+                }
+                case self::ACTION_COMMENT_TRABAJO: {
+                    $this->commentTrabajo($formData);
+                    break;
+                }
 
                 default: {
                     break;
@@ -263,10 +271,49 @@ class participante_register extends form_action_base{
         }catch(Exception $e) {
             $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
         }
-
-
-
     }
+
+    private function voteTrabajo($formData) {
+
+        try {
+
+            //-- Validar Datos de Regirstro
+            $this->validateRequiredFields(['id_participante','id_trabajo']);
+
+            $id_participante = $formData["id_participante"];
+            $id_trabajo = $formData["id_trabajo"];
+
+            $tl = new TrabajoLogic();
+            $tl->votarTrabajo($id_participante,$id_trabajo);
+
+            $this->result = ["status"=>"ok"];
+
+        }catch(Exception $e) {
+            $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
+        }
+    }
+
+    private function commentTrabajo($formData) {
+
+        try {
+
+            //-- Validar Datos de Regirstro
+            $this->validateRequiredFields(['id_trabajo','comments']);
+
+            $id_trabajo = $formData["id_trabajo"];
+            $comment = $formData["comments"];
+
+            $tl = new TrabajoLogic();
+            $tl->comentarTrabajo($id_trabajo,$comment);
+
+            $this->result = ["status"=>"ok"];
+
+        }catch(Exception $e) {
+            $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
+        }
+    }
+
+
     public function getParticipante() {
         return $this->participante;
     }

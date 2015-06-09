@@ -43,7 +43,7 @@
 	
 	  <div class="slogan wow fadeInDown" data-wow-delay="0.4s" >
 		
-		<form action="" method="get"><table width="100%" border="0" cellspacing="6" cellpadding="0" id="login">
+		<form action="" method="post"><table width="100%" border="0" cellspacing="6" cellpadding="0" id="login">
 		  <tr>
 		    <td align="center"><h1>Congreso UTELPa 2015</h1></td>
 	      </tr>
@@ -51,11 +51,11 @@
 		    <td align="center">Ingrese su email</td>
 	      </tr>
 		  <tr>
-		    <td align="center"><input type="text" name="textfield" id="textfield"></td>
+		    <td align="center"><input type="text" name="email" id="email"></td>
 	      </tr>
 		 
 		  <tr>
-		    <td align="center"><button type="submit" class="btn btn-skin pull-center" id="btnContactUs">
+		    <td align="center"><button type="button" class="btn btn-skin pull-center" id="btnRetrievePass">
                       Enviar Contraseña</button></td>
 	      </tr>
 		  
@@ -77,7 +77,7 @@
 	<script src="js/wow.min.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.js"></script>
-    <script src="js/formulario_inscripcion.js"></script>
+    <script src="js/formulario_recupero.js"></script>
 
 </body>
 

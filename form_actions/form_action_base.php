@@ -12,6 +12,9 @@ class form_action_base {
     const ACTION_DELETE_USER = 'delete_user';
     const ACTION_EMAIL_USERS = 'email_users';
     const ACTION_UPLOAD_TRABAJO = 'upload_trabajo';
+    const ACTION_RETRIEVE_PASS = 'retrieve_password';
+    const ACTION_VOTE = 'vote';
+    const ACTION_COMMENT_TRABAJO = 'add_trabajo_comment';
 
     protected $action;
     private $formData = [];
@@ -33,7 +36,7 @@ class form_action_base {
         foreach($requiredFields as $rf) {
             if(!isset($rf,$this->formData)) {
                 $missing_fields[] = $rf;
-            }elseif($this->formData[$rf]==''){
+            }elseif(@$this->formData[$rf]==''){
                 $missing_fields[] = $rf;
             }
         }

@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../form_action_base.php';
 require_once _PARTICIPANTE_LOGIC_PATH;
 
@@ -22,6 +23,10 @@ class participante_login extends form_action_base{
                 }
                 case self::ACTION_LOGIN_TOKEN: {
                     $this->loginToken($formData);
+                    break;
+                }
+                case self::ACTION_RETRIEVE_PASS: {
+                    $this->retrievePassword($formData);
                     break;
                 }
                 default: {
@@ -90,6 +95,23 @@ class participante_login extends form_action_base{
         }catch(Exception $e) {
             $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
         }
+    }
+
+    private function retrievePassword(Array $formData) {
+
+        try {
+
+            $this->validateRequiredFields(['email']);
+
+            $p_logic = new ParticipanteLogic();
+            $participante = $p_logic->obtenerParticipantePorEmail($formData['email']);
+            $p_logic->sendForgotPasswordEmail($participante);
+            $this->result = ["status"=>"ok"];
+
+        }catch(Exception $e) {
+            $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
+        }
+
     }
 
     public function getParticipante() {

@@ -938,10 +938,22 @@ h4 a:active{
 	background-color: #333;
 	color: #FFF;
 }
+
 #trabajos .votar{
 	border-bottom-width: 1px;
 	border-bottom-style: dotted;
 	border-bottom-color: #fff;
+}
+#trabajos .desactivado{
+color:#f0f0f0;
+display:none;
+}
+#trabajos .votado{
+	color: #333;
+	display:block;
+}
+#trabajos .votado:before {
+  content: 'VOTADO';
 }
 #trabajos a{
 	color: #333;

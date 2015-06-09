@@ -19,6 +19,10 @@ if($post_data) {
         $result = null;
 
         switch($base_form->getAction()) {
+            case form_action_base::ACTION_RETRIEVE_PASS: {
+                $participante_action = new participante_login($post_data);
+                break;
+            }
             case form_action_base::ACTION_LOGIN_REGULAR:
             case form_action_base::ACTION_LOGIN_TOKEN: {
                 $participante_action = new participante_login($post_data);
@@ -28,9 +32,11 @@ if($post_data) {
                 break;
             }
             case form_action_base::ACTION_UPLOAD_TRABAJO: {
-                $participante_action = new participante_register($_POST,$_FILES);
+                $participante_action = new participante_register($post_data,$_FILES);
                 break;
             }
+            case form_action_base::ACTION_COMMENT_TRABAJO:
+            case form_action_base::ACTION_VOTE:
             case form_action_base::ACTION_EMAIL_USERS:
             case form_action_base::ACTION_DELETE_USER:
             case form_action_base::ACTION_FORUM_ADD:
