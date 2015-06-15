@@ -94,9 +94,11 @@ class ParticipanteLogic {
             throw new \Exception("Error validando datos del participante. El email ya se encuentra registrado.");
         }
 
+        /*
         if(strtolower($datos["nivel"])==strtolower('Estudiantes')) {
             throw new \Exception("No es posible inscribirse. Se ha completado el cupo para Estudiantes.");
         }
+        */
 
         //-- Acomodamos las mayusculas/minusculas de algunos campos
         /*
@@ -245,11 +247,23 @@ class ParticipanteLogic {
 
         $nombre_y_apellido = $participante["nombre"]." ".$participante["apellido"];
 
-        $body_html = "Hola [NOMBRE],<br/><br>Tu contraseña de acceso al sitio es <strong>".$participante["password"]."</strong><br/><br/>Cordialmente.<br/><br/><strong>UTELPa.</strong>";
-        $body_plain  = "Hola [NOMBRE],\n\nTu contraseña de acceso al sitio es '".$participante["password"]."'\n\nCordialmente.\n\nUTELPa.";
+        $body_html = "[nombre],<br/><br/>
+                      Recib&iacute;s este correo porque solicitaste <strong>RECUPERAR TU CONTRASEÑA</strong> en www.congresoutelpa.com.ar<br><br>
+                      Te recordamos a continuación tu contraseña<br/><br/>
+                      Usuario: [email]<br>
+                      Clave: [password]<br><br>Saludos cordiales,<br><br>UTELPa.";
 
-        $body_html = str_replace('[NOMBRE]',$participante["nombre"],$body_html);
-        $body_plain = str_replace('[NOMBRE]',$participante["nombre"],$body_plain);
+        $body_plain = "[nombre],\n\n
+                      Recibís este correo porque solicitaste RECUPERAR TU CONTRASEÑA en www.congresoutelpa.com.ar\n\n
+                      Te recordamos a continuación tu contraseña\n\n
+                      Usuario: [email]\n
+                      Clave: [password]\n\nSaludos cordiales,\n\nUTELPa.";
+
+        foreach($participante as $key=>$val) {
+            $body_html = str_replace("[".$key."]",$val,$body_html);
+            $body_plain = str_replace("[".$key."]",$val,$body_plain);
+        }
+
 
         try {
             $subject = '=?UTF-8?Q?' . quoted_printable_encode('Recupero de contraseña UTELPa.') . '?=';

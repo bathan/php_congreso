@@ -96,7 +96,7 @@ class Utilities {
 
     public static function sendEmail($email_to,$name_to,$body_html,$body_plain=null,$subject) {
         $mail = new \PHPMailer();
-
+        $mail->CharSet = "UTF-8";
         //$mail->SMTPDebug = 3;                               // Enable verbose debug output
 
         $mail->isSMTP();                                      // Set mailer to use SMTP
@@ -112,7 +112,7 @@ class Utilities {
         $mail->addAddress($email_to, $name_to);     // Add a recipient
         $mail->isHTML(true);                                  // Set email format to HTML
 
-        $body_plain = utf8_encode($body_plain);
+        //$body_plain = utf8_encode($body_plain);
 
         $mail->Subject = $subject;
         $mail->Body    = $body_html;

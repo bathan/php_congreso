@@ -64,11 +64,11 @@
                         <option value="otros">Otros</option>
                     </select>
                 </div>
-                <div id="nivel_agotado">
+                <!-- <div id="nivel_agotado">
                     <p id="error_text" color="red" style="font-size: smaller; color: #ff0000;">
                         Ya se encuenta completo el cupo para Estudiantes.
                     </p>
-                </div>
+                </div> -->
             </div>
             <div class="col-md-12" id="submit-button">
                 <button type="button" class="btn btn-skin pull-center" id="btnRegister">

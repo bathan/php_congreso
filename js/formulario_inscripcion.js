@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     var button_running = false;
 
-
+    /*
     $("#nivel").change(function(){
            $(this).find("option:selected").each(function(){
                if($(this).attr("value").toLowerCase()=="estudiantes"){
@@ -17,6 +17,7 @@ $(document).ready(function() {
                }
            });
        }).change();
+       */
 
     $('#btnRegister').click(function (e) {
 
@@ -58,11 +59,12 @@ $(document).ready(function() {
             return;
         }
 
+        /*
         if(nivel.toLowerCase()=='estudiantes') {
             alert('No es posible inscribirse. Se ha completado el cupo para Estudiantes.');
             $('#btnRegister').attr("disabled", false);
             return;
-        }
+        }*/
 
         //-- Validación de Email y su confirmación
         if(!isValidEmail(email)) {
