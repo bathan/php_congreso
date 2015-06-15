@@ -4,6 +4,7 @@ require_once _PARTICIPANTE_LOGIC_PATH;
 require_once _TRABAJO_LOGIC_PATH;
 require_once _UTILITIES_PATH;
 
+
 $participante_id = $_GET["participante_id"];
 $pl = new ParticipanteLogic();
 $participante = $pl->obtenerParticipante($participante_id);
@@ -30,7 +31,6 @@ $participante = $pl->obtenerParticipante($participante_id);
             ?>
             <tr>
                 <td width="81%" align="left"><a href="download.php?id_trabajo=<?=$trabajo["id"];?>"><?=$trabajo["titulo_trabajo"];?></a></td>
-                <td width="10%" align="right"><?=$trabajo["votos"]?> votos</td>
                 <td width="9%" align="right" >
                     <span class="<?=(($votado) ? "desactivado votado" :"votar");?> " >
                     <?php

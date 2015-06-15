@@ -74,9 +74,7 @@
 		    LATINOAMERICANO.<br>
 	      <span class="celeste">“La construcción del conocimiento desde la escuela”	</span>	    </h4>
           
-        <div class="page-scroll">
-            <h4><a href="#inscripcion" class="btn2">Inscripción hasta el día 12 de junio de 2015</a></h4>
-          </div>
+        
           
 		</div>
 		<div class="page-scroll">
@@ -248,9 +246,7 @@ Santa Rosa</h5><p class="subtitle">Circulo de Suboficiales</p>
 		</div>
     <div class="row">
         <div class="col-md-6">
-        <?php
-        include("form.php");
-        ?>
+        La Inscripcion cerró el 12 de Junio.
         </div>
 		
 		<div class="col-sm-4">

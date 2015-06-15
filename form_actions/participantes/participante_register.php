@@ -52,6 +52,10 @@ class participante_register extends form_action_base{
                     $this->commentTrabajo($formData);
                     break;
                 }
+                case self::ACTION_SEND_COMMENT_TRABAJO: {
+                    $this->sendTrabajoComment($formData);
+                    break;
+                }
 
                 default: {
                     break;
@@ -245,10 +249,10 @@ class participante_register extends form_action_base{
                 foreach($p as $column=>$value) {
                     $body = str_replace("[".strtolower($column)."]",$value,$body);
                 }
-                $html_body = str_replace("\n\n","<br><br>",$body);
+                $html_body = nl2br($body);
                 $emails_enviados[] = ["recipient"=>$p["email"],"body_plain"=>$body,"body_html"=>$html_body];
 
-                //Utilities::sendEmail($p["email"],$nombre_y_apellido,$html_body,$body,$subject);
+                Utilities::sendEmail($p["email"],$nombre_y_apellido,$html_body,$body,$subject);
             }
 
             $this->result = ["status"=>"ok","emails_enviados"=>$emails_enviados];
@@ -313,6 +317,28 @@ class participante_register extends form_action_base{
         }
     }
 
+    private function sendTrabajoComment($formData) {
+
+        try {
+
+            //-- Validar Datos de Regirstro
+            $this->validateRequiredFields(['id_trabajo','comments']);
+
+            $id_trabajo = $formData["id_trabajo"];
+            $comment = $formData["comments"];
+
+            //-- Guardamos la devolución para luego enviarla
+            $tl = new TrabajoLogic();
+            $tl->comentarTrabajo($id_trabajo,$comment);
+
+            $tl->enviarDevolucionTrabajo($id_trabajo);
+
+            $this->result = ["status"=>"ok"];
+
+        }catch(Exception $e) {
+            $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
+        }
+    }
 
     public function getParticipante() {
         return $this->participante;

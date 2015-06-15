@@ -35,6 +35,7 @@ if($post_data) {
                 $participante_action = new participante_register($post_data,$_FILES);
                 break;
             }
+            case form_action_base::ACTION_SEND_COMMENT_TRABAJO:
             case form_action_base::ACTION_COMMENT_TRABAJO:
             case form_action_base::ACTION_VOTE:
             case form_action_base::ACTION_EMAIL_USERS:

@@ -72,7 +72,6 @@ class TrabajoLogic {
                     throw new Exception("Lo sentimos, ha ocurrido un error al subir su trabajo.");
                 }
 
-                //$s3Path = CMSUtilities::putCategoryIcon($cms_cat_id,$file,$original_file_name);
             }else {
                 throw new Exception("El archivo está vacío");
             }
@@ -125,6 +124,31 @@ class TrabajoLogic {
         }
     }
 
+    public function enviarDevolucionTrabajo($id_trabajo) {
+        try {
+            $t = new TrabajoEntity();
+            $t->fromDatabase($id_trabajo);
+
+            $p = new ParticipanteEntity();
+            $p->fromDatabase($t->id_participante);
+
+            $participante = $p->toArray();
+
+            $nombre_y_apellido = $participante["nombre"]." ".$participante["apellido"];
+
+
+            try {
+                $subject = '=?UTF-8?Q?' . quoted_printable_encode('Devolución trabajo subido UTELPa.') . '?=';
+                Utilities::sendEmail($participante["email"],$nombre_y_apellido,nl2br($t->comentarios),$t->comentarios,$subject);
+            }catch(Exception $e) {
+                throw $e;
+            }
+
+        }catch(Exception $e) {
+
+        }
+    }
+
     public function listarTrabajosParaParticipante($participante) {
 
         $listado = TrabajoEntity::listTrabajos(0,-1);
@@ -134,11 +158,11 @@ class TrabajoLogic {
 
         foreach($listado["rows"] as $trabajo ) {
 
-            $id_participante = $trabajo["id_participante"];
+            $id_participante_trabajo = $trabajo["id_participante"];
             $p = new ParticipanteEntity();
-            $p->fromDatabase($id_participante);
+            $p->fromDatabase($id_participante_trabajo);
 
-            if(strtolower($p->nivel)==strtolower($participante["nivel"])) {
+            if(strtolower($p->nivel)==strtolower($participante["nivel"]) && $trabajo["id_participante"] != $participante["id"]) {
                 //-- Revisamos si el trabajo ya fué votado por este ñato
                 $voto = VotoEntity::getVotoByParticipanteAndTrabajo($participante["id"],$trabajo["id"]);
                 $trabajo["votado"] = !is_null($voto);

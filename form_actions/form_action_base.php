@@ -15,6 +15,7 @@ class form_action_base {
     const ACTION_RETRIEVE_PASS = 'retrieve_password';
     const ACTION_VOTE = 'vote';
     const ACTION_COMMENT_TRABAJO = 'add_trabajo_comment';
+    const ACTION_SEND_COMMENT_TRABAJO = 'send_trabajo_comment';
 
     protected $action;
     private $formData = [];

@@ -329,6 +329,38 @@ class ParticipanteLogic {
     }
 
     /**
+     * Devuelve una lista de participantes acorde a los filtros seleccionados pero si o si tienen que tener algún trabajo subido
+     * @param int $from
+     * @param $limit
+     * @param array $filtros
+     * @return array
+     * @throws \Exception
+     */
+    public function listParticipantesConTrabajos($from=0,$limit=_DEFAULT_LIST_LIMIT,Array $filtros=null,Array $orden = null) {
+
+        $this->validarFiltros($filtros);
+
+        try {
+            $lista_trabajos = TrabajoEntity::listTrabajos(0,-1);
+            $id_participantes_con_trabajos = [];
+
+            foreach($lista_trabajos["rows"] as $tr) {
+                $id_participantes_con_trabajos[] = $tr["id_participante"];
+            }
+
+            if(is_null($orden)) {
+                $orden = ["c"=>"id","d"=>"ASC"];
+            }
+
+            $filtros["specific_ids"] = $id_participantes_con_trabajos;
+
+            return ParticipanteEntity::listParticipantes($from,$limit,$filtros,$orden);
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
      * Devuelve el total de participantes segun los filtros seleccionados
      * @param int $from
      * @param $limit
@@ -346,7 +378,33 @@ class ParticipanteLogic {
             throw $e;
         }
     }
+    /**
+     * Devuelve el total de participantes segun los filtros seleccionados
+     * @param int $from
+     * @param $limit
+     * @param array $filtros
+     * @return array
+     * @throws \Exception
+     */
+    public function countParticipantesConTrabajos(Array $filtros=null) {
 
+        $this->validarFiltros($filtros);
+
+        try {
+            $lista_trabajos = TrabajoEntity::listTrabajos(0,-1);
+            $id_participantes_con_trabajos = [];
+
+            foreach($lista_trabajos["rows"] as $tr) {
+                $id_participantes_con_trabajos[] = $tr["id_participante"];
+            }
+
+            $filtros["specific_ids"] = $id_participantes_con_trabajos;
+
+            return ParticipanteEntity::listParticipantes(0,null,$filtros,null,true);
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
     private function validarFiltros(Array $filtros) {
         if($filtros && count($filtros)>0) {
             //-- Validar que no manden fitros cualquiera

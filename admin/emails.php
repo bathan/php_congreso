@@ -164,7 +164,7 @@ $counts = $pl->getPartipanteCounts();
                     var posting = $.post( "/form_actions/participantes/index.php", dataString );
                     var current_text = $('#enviar').val();
 
-                    $('#enviar').prop('value','Enviando mensajes');
+                    $('#enviar').prop('value','Enviando mensajes, aguarde por favor.');
                     $('#enviar').attr('disabled',true);
                     am_i_sending = true;
 

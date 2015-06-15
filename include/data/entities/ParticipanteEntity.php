@@ -180,6 +180,7 @@ class ParticipanteEntity {
             $q .= " WHERE 1=1 ";
 
             $magic_filter_value = null;
+            $specific_ids = [];
 
             if(!is_null($filtros) && count($filtros)>0) {
 
@@ -189,6 +190,10 @@ class ParticipanteEntity {
                 foreach($filtros as $campo=>$valor) {
                     if($campo=='magic') {
                         $magic_filter_value = $valor;
+                        continue;
+                    }
+                    if($campo=='specific_ids') {
+                        $specific_ids = $valor;
                         continue;
                     }
                     $filter_array[]= $campo." like '%".$valor."%'";
@@ -213,6 +218,9 @@ class ParticipanteEntity {
                 $q .= " ) ";
             }
 
+            if(count($specific_ids)>0) {
+                $q .= " AND id in (".implode(",",$specific_ids).")";
+            }
 
             if(!$count && $orden && count($orden)>0) {
                 if($orden["c"]=='nivel') {
@@ -230,7 +238,7 @@ class ParticipanteEntity {
             }
 
             if(_APP_DEBUG) {
-            //    echo "<pre>".$q."</pre>";
+               //echo "<pre>".$q."</pre>";
             }
 
             if($count) {
