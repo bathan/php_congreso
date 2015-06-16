@@ -91,8 +91,8 @@ include_once __DIR__ . '/trabajos_seeker.php';
 							  <table width="100%" border="0" cellspacing="0" cellpadding="0" id="participantes">
 							    <tr class="firstRow">
 							      <td width="80">Devolución</td>
-							      <td><a href="javascript:sortTable('titulo');">Titulo<span class="icon fa-sort"></span></a></td>
-							      <td><a href="javascript:sortTable('autor');">Autor <span class="icon fa-sort"></span></a></td>
+							      <td><a href="javascript:sortTable('titulo_trabajo');">Titulo<span class="icon fa-sort"></span></a></td>
+							      <td><a href="javascript:sortTable('apellido');">Autor <span class="icon fa-sort"></span></a></td>
 							      <td width="80"><a href="javascript:sortTable('votos');">Votos<span class="icon fa-sort"></span></a></td>
 							      <td><a href="javascript:sortTable('nivel');">Nivel <span class="icon fa-sort"></span></a></td>
 						        </tr>
@@ -102,10 +102,10 @@ include_once __DIR__ . '/trabajos_seeker.php';
 ?>
 
                                         <tr>
-                                            <td align="center" valign="middle" class="centrado"><a href="edit_work.php?id=<?=$p["id"];?>" rel="leanModal"><span class="icon fa-eye"></span></a></td>
-                                            <td class="izquierda"><?=$p["nombre"];?></td>
-                                            <td class="izquierda"><?=$p["apellido"];?></td>
-                                            <td class="izquierda"><?=$p["dni"];?></td>
+                                            <td align="center" valign="middle" class="centrado"><a href="edit_work.php?id=<?=$p["id_participante"];?>" rel="leanModal"><span class="icon fa-eye"></span></a></td>
+                                            <td class="izquierda"><?=$p["titulo_trabajo"];?></td>
+                                            <td class="izquierda"><?=$p["apellido"]." ".$p["nombre"];?></td>
+                                            <td class="izquierda"><?=$p["votos"];?></td>
                                             <td class="izquierda"><?=$p["nivel"];?></td>
                                         </tr>
 
@@ -124,7 +124,7 @@ include_once __DIR__ . '/trabajos_seeker.php';
 						      </table>
 							  <table width="100%" border="0" cellspacing="0" cellpadding="0">
 							    <tr>
-							      <td width="50%" align="left"><div class="listados"><a href="/admin/export/excel/?limit=<?=($total+100);?>&<?=$_SERVER['QUERY_STRING']?>"><span class="icon fa-file-pdf-o"></span> Exportar</a></div></td>
+							      <td width="50%" align="left">&nbsp;</td>
 							      <td width="50%" align="right">  <a href="#">&laquo;</a> <a href="#">&#8249;</a> <a href="#">&#8250;</a> <a href="#">&raquo;</a></td>
 						        </tr>
 						      </table>

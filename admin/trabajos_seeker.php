@@ -21,7 +21,7 @@ try {
         $orderBy["c"] = $_GET["sort_field"];
         $orderBy["d"] = $_GET["sort_direction"];
     }else{
-        $orderBy["c"] = "id";
+        $orderBy["c"] = "id_trabajo";
         $orderBy["d"] = "asc";
     }
 

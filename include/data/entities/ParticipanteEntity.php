@@ -265,4 +265,92 @@ class ParticipanteEntity {
         }
     }
 
+    public static function listParticipantesConTrabajos($from=0,$limit=_DEFAULT_LIST_LIMIT,Array $filtros=null,Array $orden = null,$count=false) {
+
+        try {
+            $db = new CongresoDataAccess();
+
+            $response_array = ["orderby"=>$orden,"rows"=>[]];
+
+            if($count) {
+                $q = "select count(*) as the_count from v_trabajos_participantes";
+            }else{
+                $q = "select * from v_trabajos_participantes ";
+            }
+
+            $q .= " WHERE 1=1 ";
+
+            $magic_filter_value = null;
+
+            if(!is_null($filtros) && count($filtros)>0) {
+
+
+                $filter_array = [];
+
+                foreach($filtros as $campo=>$valor) {
+                    if($campo=='magic') {
+                        $magic_filter_value = $valor;
+                        continue;
+                    }
+                    $filter_array[]= $campo." like '%".$valor."%'";
+                }
+
+                if(count($filter_array)>0) {
+                    $q .= " AND ";
+                    $q .= implode(' AND ',$filter_array);
+                }
+
+            }
+
+            if($magic_filter_value) {
+                //-- Find by all fields
+                $q .= " AND ( ";
+
+                $q .= " ( nombre like '%$magic_filter_value%' ) OR ";
+                $q .= " ( apellido like '%$magic_filter_value%' )  ";
+                $q .= " ) ";
+            }
+
+            if(!$count && $orden && count($orden)>0) {
+                if($orden["c"]=='nivel') {
+                    $orden["c"] = ' CAST(nivel as char) ';
+                }
+                $q .=" ORDER BY ".$orden["c"]." ".$orden["d"]." ";
+            }
+
+            if(!$count && $limit > 0) {
+                if($from==0) {
+                    $q .= " LIMIT ".$limit;
+                }else{
+                    $q .= " LIMIT ".$from.",".$limit;
+                }
+            }
+
+            if(_APP_DEBUG) {
+                //echo "<pre>".$q."</pre>";
+            }
+
+            if($count) {
+                $db_resource = $db->executeAndFetchSingle($q);
+                $response_array = $db_resource["the_count"];
+            }else{
+                $db_resource = $db->executeAndFetch($q);
+                if(count($db_resource)>0) {
+                    $rows = [];
+                    foreach($db_resource as $res) {
+                        $tp = new TrabajoParticipanteEntity();
+                        Utilities::populateClassFromArray($tp,$res);
+                        $rows[$res["id_trabajo"]] = $tp->toArray();
+                    }
+
+                    $response_array["rows"] = $rows;
+                }
+            }
+
+            return $response_array;
+
+        }catch(\Exception $e) {
+            throw $e;
+        }
+    }
 }

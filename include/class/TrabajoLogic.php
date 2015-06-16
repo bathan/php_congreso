@@ -193,6 +193,39 @@ class TrabajoLogic {
         }
     }
 
+    public function enviarEmailTrabajoRecibido($id_trabajo) {
+
+        $pl = new ParticipanteLogic();
+
+        $trabajo = $this->obtenerTrabajo($id_trabajo);
+        $participante = $pl->obtenerParticipante($trabajo["id_participante"]);
+
+        $nombre_y_apellido = $participante["nombre"]." ".$participante["apellido"];
+
+        $body_html = "Compañeras y compañeros,<br/><br/>
+Hemos recibido la experiencia pedagógica, la misma será leída por un grupo de docentes con distintas trayectorias de formación que enviarán por mail una devolución sobre el trabajo presentado. Tener en cuenta que la experiencia debe encuadrarse dentro de la pedagogía emancipadora.<br/><br/>
+Esta experiencia será compartida (mediante una presentación de 15' como máximo) en la Sede que participes.<br/><br/>
+Por favor te recomendamos chequear regularmente el correo electrónico, ya que es el principal medio que utilizaremos como vía de contacto.<br/><br/>
+Saludos cordiales,<br/>
+<strong>UTELPa</strong><br/>";
+
+        $body_plain  = preg_replace('#<br\s*/?>#i', "\n", $body_html);
+        $body_plain = strip_tags($body_plain);
+
+        $email_sent = false;
+
+        try {
+            $subject = '=?UTF-8?Q?' . quoted_printable_encode('Hemos recibido la experiencia pedagógica.') . '?=';
+
+            $email_sent = Utilities::sendEmail($participante["email"],$nombre_y_apellido,$body_html,$body_plain,$subject);
+        }catch(Exception $e) {
+
+        }
+
+        return $email_sent;
+
+    }
+
 
 }
 

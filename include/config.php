@@ -33,6 +33,7 @@ define("_CONGRESO_DATA_ACCESS_PATH", _APP_PATH . "/include/data/CongresoDataAcce
 //-- Entities
 define("_PARTICIPANTE_ENTITY_PATH", _APP_PATH . "/include/data/entities/ParticipanteEntity.php");
 define("_TRABAJO_ENTITY_PATH", _APP_PATH . "/include/data/entities/TrabajoEntity.php");
+define("_TRABAJO_PARTICIPANTE_ENTITY_PATH", _APP_PATH . "/include/data/entities/TrabajoParticipanteEntity.php");
 define("_VOTO_ENTITY_PATH", _APP_PATH . "/include/data/entities/VotoEntity.php");
 
 //-- Logics

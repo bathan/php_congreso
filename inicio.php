@@ -47,20 +47,22 @@ include_once __DIR__ . '/session.php';
         <li class="active"><a href="#intro">Inicio</a></li>
         <li><a href="#sedes">Calendario</a></li>
         <li><a href="#informacion2">Movimiento Pedagógico</a></li>
-        <li><a href="#informacion">Experiencias Pedagógicas</a></li>
+        
 		        
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ejes Temáticos<b class="caret"></b></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mis Secciones<b class="caret"></b></a>
           <ul class="dropdown-menu">
+          <li><a href="#informacion">Experiencias Pedagógicas</a></li>
             <li><a href="#eje1">Eje Temático 1</a></li>
             <li><a href="#">Eje Temático 2</a></li><li><a href="#">Eje Temático 3</a></li>
             <li><a href="#">Eje Temático 4</a></li>
+            <li>
+              <a href="session.php?logout=1">Cerrar Sesión</a>
+          </li>
           </ul>
           
         </li>
-          <li>
-              <a href="session.php?logout=1">LogOut</a>
-          </li>
+          
       </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -412,8 +414,10 @@ Santa Rosa</h5><p class="subtitle">Circulo de Suboficiales</p>
   <li> <a href="http://www.lapampa.edu.ar:4040/sitio/objetos/BibliotecaDigital/Normativas/Provinciales/Le yes/2511.pdf" target="_blank">Ley Provincial de Educación N°2511</a></li>
   <li>            <a href="http://www.me.gov.ar/consejo/resoluciones/res11/165-11.pdf" target="_blank">Resolución N°165/11: 190 días de clases</a></li>
   </ul><br>
-  <h3>Después de leer el eje <a href="#"><strong> PARTICIPA DEL FORO</strong></a></h3>
-        </div>
+  <h3>Después de leer el eje <a href="#"><strong> PARTICIPA DEL FORO</strong></a><br>
+ 
+</h3>
+  <strong class="rojo">(El foro estará disponible a partir del Martes 23 de Junio)</strong> </div>
     </div>	
 
 		</div>

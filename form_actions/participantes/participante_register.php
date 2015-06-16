@@ -269,8 +269,9 @@ class participante_register extends form_action_base{
 
             $tl = new TrabajoLogic();
             $new_trabajo_id = $tl->agregarTrabajo($formData,$filesData);
+            $email_enviado = $tl->enviarEmailTrabajoRecibido($new_trabajo_id);
 
-            $this->result = ["status"=>"ok","trabajo_id"=>$new_trabajo_id];
+            $this->result = ["status"=>"ok","trabajo_id"=>$new_trabajo_id,"email_enviado"=>$email_enviado];
 
         }catch(Exception $e) {
             $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];

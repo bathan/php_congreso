@@ -1,6 +1,7 @@
 <?php
 require_once _PARTICIPANTE_ENTITY_PATH;
 require_once _TRABAJO_ENTITY_PATH;
+require_once _TRABAJO_PARTICIPANTE_ENTITY_PATH;
 
 class ParticipanteLogic {
 
@@ -341,20 +342,13 @@ class ParticipanteLogic {
         $this->validarFiltros($filtros);
 
         try {
-            $lista_trabajos = TrabajoEntity::listTrabajos(0,-1);
-            $id_participantes_con_trabajos = [];
-
-            foreach($lista_trabajos["rows"] as $tr) {
-                $id_participantes_con_trabajos[] = $tr["id_participante"];
-            }
 
             if(is_null($orden)) {
                 $orden = ["c"=>"id","d"=>"ASC"];
             }
 
-            $filtros["specific_ids"] = $id_participantes_con_trabajos;
+            return ParticipanteEntity::listParticipantesConTrabajos($from,$limit,$filtros,$orden);
 
-            return ParticipanteEntity::listParticipantes($from,$limit,$filtros,$orden);
         }catch(\Exception $e) {
             throw $e;
         }
@@ -391,20 +385,13 @@ class ParticipanteLogic {
         $this->validarFiltros($filtros);
 
         try {
-            $lista_trabajos = TrabajoEntity::listTrabajos(0,-1);
-            $id_participantes_con_trabajos = [];
 
-            foreach($lista_trabajos["rows"] as $tr) {
-                $id_participantes_con_trabajos[] = $tr["id_participante"];
-            }
-
-            $filtros["specific_ids"] = $id_participantes_con_trabajos;
-
-            return ParticipanteEntity::listParticipantes(0,null,$filtros,null,true);
+            return ParticipanteEntity::listParticipantesConTrabajos(0,null,$filtros,null,true);
         }catch(\Exception $e) {
             throw $e;
         }
     }
+
     private function validarFiltros(Array $filtros) {
         if($filtros && count($filtros)>0) {
             //-- Validar que no manden fitros cualquiera
