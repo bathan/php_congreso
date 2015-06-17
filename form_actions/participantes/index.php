@@ -36,6 +36,7 @@ if($post_data) {
                 break;
             }
             case form_action_base::ACTION_SEND_COMMENT_TRABAJO:
+            case form_action_base::ACTION_SEND_INIT_EMAIL:
             case form_action_base::ACTION_COMMENT_TRABAJO:
             case form_action_base::ACTION_VOTE:
             case form_action_base::ACTION_EMAIL_USERS:

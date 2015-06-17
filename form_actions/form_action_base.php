@@ -16,6 +16,7 @@ class form_action_base {
     const ACTION_VOTE = 'vote';
     const ACTION_COMMENT_TRABAJO = 'add_trabajo_comment';
     const ACTION_SEND_COMMENT_TRABAJO = 'send_trabajo_comment';
+    const ACTION_SEND_INIT_EMAIL = 'send_init_email';
 
     protected $action;
     private $formData = [];

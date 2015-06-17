@@ -243,6 +243,47 @@ class ParticipanteLogic {
         }
 
     }
+    public function sendSiteIsOpenEmail($id) {
+
+        $participante = $this->obtenerParticipante($id);
+        $nombre_y_apellido = $participante["nombre"]." ".$participante["apellido"];
+
+        $body_html = '[nombre],<br>
+
+Te informamos que ya se encuentra disponible el área de usuarios de la Plataforma Congreso UTELPa.<br>
+Para acceder a la misma, al final de este mail te enviamos un usuario y password personal, el cual recomendamos no compartir. Una vez que ingreses a dicha sección dentro de la plataforma, encontrarás 2 nuevas pestañas en el menú de navegación llamadas "EXPERIENCIAS PEDAGÓGICAS" y "EJES TEMÁTICOS".<br><br>
+
+Dentro de la pestaña "EXPERIENCIAS PEDAGÓGICAS" encontrarás los requisitos para acreditar al Congreso, subir tu trabajo a la plataforma, leer los trabajos de otros usuarios de tu mismo nivel y votarlos.<br><br>
+
+Dentro de la pestaña "EJES TEMÁTICOS" podrás acceder a cada uno de los 4 ejes de trabajo, en los cuales encontrarás el material de lectura propuesto para participar de la Consigna de cada Eje dentro del Foro de discución.<br><br>
+
+Para acceder a la sección de usuario seguí los siguientes pasos.<br><br>
+
+1. Tomá nota de tu usuario: <strong>[email]</strong>  y tu password: <strong>[password]</strong><br>
+2. Hace click <a href="http://www.congresoutelpa.com.ar/login.php">acá</a> e introducí el usuario y password del item anterior.<br><br>
+
+Por favor te recomendamos chequear regularmente el correo electrónico, ya que es el principal medio que utilizaremos como vía de contacto.<br><br>
+
+Saludos cordiales,<br>
+<strong>UTELPa</strong><br>';
+
+        foreach($participante as $col=>$val) {
+            $body_html = str_replace("[".$col."]",$val,$body_html);
+        }
+
+        $body_plain  = preg_replace('#<br\s*/?>#i', "\n", $body_html);
+        $body_plain = strip_tags($body_plain);
+
+        $email_sent = false;
+        try {
+            $email_sent =Utilities::sendEmail($participante["email"],$nombre_y_apellido,$body_html,$body_plain,'Congreso UTELPa 2015, Área de usuarios disponible.');
+        }catch(Exception $e) {
+
+        }
+
+        return $email_sent;
+
+    }
 
     public function sendForgotPasswordEmail($participante) {
 
@@ -317,7 +358,10 @@ class ParticipanteLogic {
      */
     public function listParticipantes($from=0,$limit=_DEFAULT_LIST_LIMIT,Array $filtros=null,Array $orden = null) {
 
-        $this->validarFiltros($filtros);
+        if(!is_null($filtros)) {
+            $this->validarFiltros($filtros);
+
+        }
 
         try {
             if(is_null($orden)) {

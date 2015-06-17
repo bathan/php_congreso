@@ -56,6 +56,10 @@ class participante_register extends form_action_base{
                     $this->sendTrabajoComment($formData);
                     break;
                 }
+                case self::ACTION_SEND_INIT_EMAIL: {
+                    $this->sendInitEmail($formData);
+                    break;
+                }
 
                 default: {
                     break;
@@ -212,10 +216,17 @@ class participante_register extends form_action_base{
                 'user_style' => 1,
                 'user_regdate' => time()];
 
-            /* Now Register user */
-            $phpbb_user_id = user_add($user_row);
+            //-- CHeck if user exists
+            $validation_result = validate_username($participante["email"]);
 
-            $this->result = ["status"=>"ok","php_bb_user_id"=>$phpbb_user_id];
+            if($validation_result != 'USERNAME_TAKEN') {
+                /* Now Register user */
+                $phpbb_user_id = user_add($user_row);
+            }else{
+                //-- Log In this user
+            }
+
+            $this->result = ["status"=>"ok","php_bb_user_id"=>$phpbb_user_id,"validation_result"=>$validation_result];
 
 
         }catch(Exception $e) {
@@ -343,5 +354,27 @@ class participante_register extends form_action_base{
 
     public function getParticipante() {
         return $this->participante;
+    }
+
+    public function sendInitEmail($formData) {
+        try {
+
+            $pl = new ParticipanteLogic();
+
+            //-- Enviar email a todos los participantes
+            $participantes = $pl->listParticipantes(0,-1);
+            $emails_enviados = 0;
+            foreach($participantes["rows"] as $p) {
+                $id_participante = $p['id'];
+                if($pl->sendSiteIsOpenEmail($id_participante)) {
+                    $emails_enviados++;
+                }
+            }
+
+            $this->result = ["status"=>"ok","emails_sent"=>$emails_enviados];
+
+        }catch(Exception $e) {
+            $this->result = ["status"=>"error","data"=>$e->getMessage(),"code"=>$e->getCode()];
+        }
     }
 }
