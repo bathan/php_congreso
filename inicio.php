@@ -44,25 +44,25 @@ include_once __DIR__ . '/session.php';
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#intro">Inicio</a></li>
-        <li><a href="#sedes">Calendario</a></li>
-        <li><a href="#informacion2">Movimiento Pedagógico</a></li>
         
-		        
+        <li><a href="#sedes">Calendario</a></li>
+        <li><a href="#informacion2">Mov. Pedagógico</a></li>
+        
+		     <li><a href="#informacion">Exp. Pedagógicas</a></li>   
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mis Secciones<b class="caret"></b></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ejes Temáticos<b class="caret"></b></a>
           <ul class="dropdown-menu">
-          <li><a href="#informacion">Experiencias Pedagógicas</a></li>
-            <li><a href="#eje1">Eje Temático 1</a></li>
-            <li><a href="#">Eje Temático 2</a></li><li><a href="#">Eje Temático 3</a></li>
-            <li><a href="#">Eje Temático 4</a></li>
-            <li>
-              <a href="session.php?logout=1">Cerrar Sesión</a>
-          </li>
+          
+            <li><a href="#eje1">Eje 1</a></li>
+            <li><a href="#">Eje 2</a></li><li><a href="#">Eje 3</a></li>
+            <li><a href="#">Eje 4</a></li>
+            
           </ul>
           
         </li>
-          
+          <li>
+              <a href="session.php?logout=1">Cerrar Sesión</a>
+          </li>
       </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -243,6 +243,7 @@ Santa Rosa</h5><p class="subtitle">Circulo de Suboficiales</p>
 		</div>
         <div class="row">
             <div class="col-md-12">
+            <p><iframe width="100%" height="450" src="https://www.youtube.com/embed/pTRLjLeh9m4" frameborder="0" allowfullscreen></iframe></p>
 				<div class="wow fadeInLeft" data-wow-delay="0.2s">
                 <div class="service-box">
                   <div class="service-desc">
@@ -356,13 +357,7 @@ Santa Rosa</h5><p class="subtitle">Circulo de Suboficiales</p>
           <h4><strong>EJE 1<br>
           "NUEVAS LEGALIDADES EN NUESTRAS EXPERIENCIAS PEDAGÓGICAS"
           </strong></h4>
-          <p><strong>Foro de intercambio para reflexionar sobre el marco legal en el Sistema Educativo</strong> </p>
-<p>1. Rol que juega/cumple la normativa en la formación docente y por ende en nuestras  
-            
-            prácticas pedagógicas a partir de los desafíos que plantea una organización 
-            
-            escolar democrática con gobierno colectivo.
-</p>
+          <h5 class="rojo">Material de consulta          </h5>
           <p><strong>Nivel Inicial, Primario y Modalidades
             
 </strong></p>
@@ -417,7 +412,11 @@ Santa Rosa</h5><p class="subtitle">Circulo de Suboficiales</p>
   <h3>Después de leer el eje <a href="#"><strong> PARTICIPA DEL FORO</strong></a><br>
  
 </h3>
-  <strong class="rojo">(El foro estará disponible a partir del Martes 23 de Junio)</strong> </div>
+  <p><strong>Foro de intercambio para reflexionar sobre el marco legal en el Sistema Educativo</strong></p>
+  <p>1. Rol que juega/cumple la normativa en la formación docente y por ende en nuestras prácticas pedagógicas a partir de los desafíos que plantea una organización escolar democrática con gobierno colectivo.<br>
+    
+    <strong class="rojo">(El foro estará disponible a partir del Martes 23 de Junio)</strong></p>
+        </div>
     </div>	
 
 		</div>

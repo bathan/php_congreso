@@ -9,3 +9,5 @@ admin/.htaccess
 uploads/
 phpBB3/cache/
 phpBB3/cache
+foro/cache
+foro/cache/

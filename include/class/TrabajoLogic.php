@@ -215,7 +215,7 @@ Saludos cordiales,<br/>
         $email_sent = false;
 
         try {
-            $subject = '=?UTF-8?Q?' . quoted_printable_encode('Hemos recibido la experiencia pedagógica.') . '?=';
+            $subject = '=?UTF-8?Q?' . quoted_printable_encode('Hemos recibido su trabajo.') . '?=';
 
             $email_sent = Utilities::sendEmail($participante["email"],$nombre_y_apellido,$body_html,$body_plain,$subject);
         }catch(Exception $e) {

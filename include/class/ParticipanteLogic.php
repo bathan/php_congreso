@@ -248,7 +248,7 @@ class ParticipanteLogic {
         $participante = $this->obtenerParticipante($id);
         $nombre_y_apellido = $participante["nombre"]." ".$participante["apellido"];
 
-        $body_html = '[nombre],<br>
+        $body_html = '[nombre],<br/><br>
 
 Te informamos que ya se encuentra disponible el área de usuarios de la Plataforma Congreso UTELPa.<br>
 Para acceder a la misma, al final de este mail te enviamos un usuario y password personal, el cual recomendamos no compartir. Una vez que ingreses a dicha sección dentro de la plataforma, encontrarás 2 nuevas pestañas en el menú de navegación llamadas "EXPERIENCIAS PEDAGÓGICAS" y "EJES TEMÁTICOS".<br><br>

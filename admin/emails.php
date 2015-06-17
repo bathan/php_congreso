@@ -53,9 +53,8 @@ $counts = $pl->getPartipanteCounts();
 								<h2>Enviar Emails</h2>
 							</header>
 
-							<p>Elementum sem parturient nulla quam placerat viverra
-							mauris non cum elit tempus ullamcorper dolor. Libero rutrum ut lacinia
-							donec curae mus.</p>
+							<p>¡PRECAUCIÓN!
+Este sistema permite el envío masivo de mails a los usuarios de la Plataforma. Les recomendamos ser muy cuidadosos a la hora de utilizarlo, y chequear previamente el contenido a difundir antes de presionar el botón ENVIAR, ya que una vez hecho eso no hay vuelta atrás. ¡Muchas Gracias!</p>
 
 							<form id="theform" >
 								<div class="row">

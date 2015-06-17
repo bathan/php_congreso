@@ -11,7 +11,7 @@ global $user,$auth;
 
 # your php extension
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-$phpbb_root_path = _APP_PATH.'/phpBB3/';
+$phpbb_root_path = _APP_PATH.'/foro/';
 
 /* includes all the libraries etc. required */
 require($phpbb_root_path ."common.php");

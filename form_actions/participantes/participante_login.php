@@ -66,7 +66,8 @@ class participante_login extends form_action_base{
             //-- Login To Forum
             $formData["user_token"] = $p["user_token"];
 
-            $forumResult = $this->addUserToForum($formData);
+            //$forumResult = $this->addUserToForum($formData);
+            $forumResult = [];
 
             $this->result = array_merge(["status"=>"ok","forum_result"=>$forumResult],$p);
 
@@ -167,7 +168,7 @@ class participante_login extends form_action_base{
 
             # your php extension
             $phpEx = substr(strrchr(__FILE__, '.'), 1);
-            $phpbb_root_path = _APP_PATH.'/phpBB3/';
+            $phpbb_root_path = _APP_PATH.'/foro/';
 
             /* includes all the libraries etc. required */
             require($phpbb_root_path ."common.php");
